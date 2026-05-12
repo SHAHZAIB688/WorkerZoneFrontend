@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../state/AuthContext";
 import DashboardSidebar from "./DashboardSidebar";
 import LanguageSwitcher from "./LanguageSwitcher";
+import LocationHeaderControls from "./LocationHeaderControls";
 import { BellIcon } from "./icons";
 
 const roleShellLabel = (role, t) => {
@@ -93,6 +94,7 @@ const DashboardShell = ({ title, subtitle, navItems, children, notifications, de
             </div>
             
     <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+      <LocationHeaderControls />
       <LanguageSwitcher className="hidden sm:flex" />
       <div className="relative" ref={notificationRef}>
         <button 

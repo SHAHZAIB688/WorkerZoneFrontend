@@ -13,6 +13,10 @@ const normalizeAuthUser = (doc) => ({
   specialization: doc.specialization ?? "",
   experience: doc.experience ?? 0,
   degreeFile: doc.degreeFile ?? "",
+  locationCity: doc.locationCity ?? "",
+  locationAddress: doc.locationAddress ?? "",
+  locationLat: doc.locationLat ?? null,
+  locationLng: doc.locationLng ?? null,
 });
 
 export const AuthProvider = ({ children }) => {

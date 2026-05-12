@@ -47,7 +47,14 @@ const PatientDashboard = () => {
 
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
-  const [doctorFilter, setDoctorFilter] = useState({ search: "", specialization: "all" });
+  const [doctorFilter, setDoctorFilter] = useState({
+    search: "",
+    specialization: "all",
+    nearMe: false,
+    nearLat: null,
+    nearLng: null,
+  });
+  const doctorFilterRef = useRef(doctorFilter);
   const [form, setForm] = useState({ doctorProfileId: "", date: "", timeSlot: "", reason: "" });
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -63,10 +70,21 @@ const PatientDashboard = () => {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
 
-  const fetchDoctors = async () => {
-    const { data } = await patient.get("/doctors");
+  useEffect(() => {
+    doctorFilterRef.current = doctorFilter;
+  }, [doctorFilter]);
+
+  const fetchDoctors = useCallback(async () => {
+    const f = doctorFilterRef.current;
+    const params = {};
+    if (f.nearMe && f.nearLat != null && f.nearLng != null) {
+      params.lat = f.nearLat;
+      params.lng = f.nearLng;
+      params.radiusKm = 100;
+    }
+    const { data } = await patient.get("/doctors", { params });
     setDoctors(data);
-  };
+  }, []);
 
   const fetchHealthSummary = async () => {
     try {
@@ -113,17 +131,19 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     fetchDoctors();
+  }, [fetchDoctors, doctorFilter.nearMe, doctorFilter.nearLat, doctorFilter.nearLng]);
+
+  useEffect(() => {
     fetchAppointments();
     fetchHealthSummary();
 
-    // Refresh appointments every 10 seconds and doctors every 30 seconds
     const appointmentIntervalId = setInterval(fetchAppointments, 10000);
     const doctorIntervalId = setInterval(fetchDoctors, 30000);
     return () => {
       clearInterval(appointmentIntervalId);
       clearInterval(doctorIntervalId);
     };
-  }, []);
+  }, [fetchDoctors]);
 
   useEffect(() => {
     const verifyPaymentOnReturn = async () => {

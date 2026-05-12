@@ -1,4 +1,7 @@
 {
+  "brand": {
+    "name": "Worker Zone"
+  },
   "lang": {
     "en": "EN",
     "ur": "اردو",
@@ -6,13 +9,14 @@
   },
   "common": {
     "free": "Free",
-    "patient": "Patient",
+    "unnamedWorker": "Worker",
+    "patient": "Client",
     "processing": "Processing...",
     "searching": "Searching..."
   },
   "nav": {
     "home": "Home",
-    "findDoctors": "Find Doctors",
+    "findDoctors": "Find Workers",
     "about": "About",
     "contact": "Contact",
     "dashboard": "Dashboard",
@@ -20,13 +24,48 @@
     "joinNow": "Join Now"
   },
   "header": {
-    "logoAlt": "Perscripto Logo",
+    "logoAlt": "Worker Zone logo",
     "account": "Account",
     "userAccount": "User Account",
-    "logout": "Logout"
+    "logout": "Logout",
+    "locationHint": "Pick a city or use your device’s live location.",
+    "locationPinAria": "Detect current location",
+    "locationClearAria": "Clear saved location"
+  },
+  "locationPicker": {
+    "defaultRegion": "Pakistan",
+    "useCurrentLocation": "Use current location",
+    "seeAllIn": "See all in {{country}}",
+    "popular": "Popular",
+    "clearSaved": "Clear saved location",
+    "dropdownAria": "Choose work location",
+    "searchDistricts": "Search districts…",
+    "districtCount": "{{count}} districts",
+    "allDistricts": "All districts",
+    "noDistrictMatch": "No district matches your search.",
+    "provinces": {
+      "PB": "Punjab",
+      "SD": "Sindh",
+      "KP": "Khyber Pakhtunkhwa",
+      "BL": "Balochistan",
+      "GB": "Gilgit-Baltistan",
+      "JK": "Azad Jammu and Kashmir"
+    },
+    "cities": {
+      "lahore": "Lahore",
+      "karachi": "Karachi",
+      "islamabad": "Islamabad",
+      "rawalpindi": "Rawalpindi",
+      "faisalabad": "Faisalabad",
+      "multan": "Multan",
+      "peshawar": "Peshawar",
+      "quetta": "Quetta",
+      "sialkot": "Sialkot",
+      "gujranwala": "Gujranwala"
+    }
   },
   "footer": {
-    "tagline": "Modern doctor booking platform for secure, fast, and reliable service management. Making skilled help accessible for everyone.",
+    "tagline": "Modern worker booking platform for secure, fast, and reliable trades and home services. Making skilled help accessible for everyone.",
     "platform": "Platform",
     "company": "Company",
     "contactUs": "Contact Us",
@@ -34,7 +73,7 @@
     "aboutUs": "About Us",
     "termsOfService": "Terms of Service",
     "contactSupport": "Contact Support",
-    "rights": "© 2026 Perscripto. All rights reserved.",
+    "rights": "© 2026 Worker Zone. All rights reserved.",
     "terms": "Terms",
     "privacy": "Privacy",
     "cookies": "Cookies",
@@ -43,65 +82,65 @@
     "socialX": "X"
   },
   "home": {
-    "heroBadge": "Trusted Healthcare Network",
-    "heroTitle": "Book Trusted Doctors in Minutes",
-    "heroSubtitle": "Find experienced doctors, book appointments in seconds, and stay updated with secure reminders and notifications.",
-    "findDoctors": "Find Doctors",
-    "bookAppointment": "Book Appointment",
-    "heroImgAlt": "Doctor consultation",
-    "searchPlaceholder": "Search doctors by name or service type...",
-    "searchDoctors": "Search Doctors",
-    "topSpecsTitle": "Top Specialities",
-    "topSpecsSubtitle": "Explore common medical specialities quickly.",
-    "whyTitle": "Why Patients Choose Perscripto",
-    "whySubtitle": "Trusted platform for fast and secure doctor bookings.",
+    "heroBadge": "Trusted Trades Network",
+    "heroTitle": "Book Skilled Workers in Minutes",
+    "heroSubtitle": "Find experienced tradespeople, book a slot in seconds, and stay updated with secure reminders and notifications.",
+    "findDoctors": "Find Workers",
+    "bookAppointment": "Book a service",
+    "heroImgAlt": "Skilled worker on the job",
+    "searchPlaceholder": "Search workers by name or trade...",
+    "searchDoctors": "Search Workers",
+    "topSpecsTitle": "Popular trades",
+    "topSpecsSubtitle": "Jump straight to common worker categories.",
+    "whyTitle": "Why Clients Choose Worker Zone",
+    "whySubtitle": "Trusted platform for fast and secure worker bookings.",
     "whyHighlight": "Highlighted Benefit",
     "whyClickHint": "Click to highlight",
     "howTitle": "How It Works",
-    "howSubtitle": "Get consultation-ready in four simple steps.",
+    "howSubtitle": "Get your job booked in four simple steps.",
     "stepLabel": "Step {{n}}",
-    "featuredTitle": "Featured Doctors",
+    "featuredTitle": "Featured workers",
     "featuredSubtitle": "Meet our most trusted professionals.",
     "experience": "Experience",
     "years": "{{n}} years",
     "rating": "Rating",
     "startingRate": "Starting Rate",
     "viewDetails": "View Details",
-    "testimonialsTitle": "What Our Patients Say",
-    "testimonialsSubtitle": "Real stories from people who have experienced a better way to hire skilled doctors with Perscripto.",
+    "testimonialsTitle": "What our clients say",
+    "testimonialsSubtitle": "Real stories from people who hired skilled workers through Worker Zone.",
     "faqTitle": "FAQ",
-    "faqSubtitle": "Answers to common patient questions.",
+    "faqSubtitle": "Answers to common client questions.",
     "ctaTitle": "Ready to Book Your Next Service?",
-    "ctaSubtitle": "Join Perscripto and connect with trusted doctors in minutes.",
-    "browseDoctors": "Browse Doctors",
+    "ctaSubtitle": "Join Worker Zone and connect with trusted workers in minutes.",
+    "browseDoctors": "Browse workers",
     "createAccount": "Create Account",
-    "loadDoctorsError": "Unable to load featured doctors",
+    "loadDoctorsError": "Unable to load featured workers",
     "howSteps": [
       {
-        "title": "Search Doctors",
-        "text": "Browse qualified doctors by specialization, ratings, and availability."
+        "title": "Search workers",
+        "text": "Browse qualified tradespeople by trade, ratings, and availability."
       },
       {
-        "title": "Review Profile",
-        "text": "Check experience, consultation fee, and patient feedback before booking."
+        "title": "Review profile",
+        "text": "Check experience, service rate, and client feedback before booking."
       },
       {
-        "title": "Book Appointment",
-        "text": "Choose your date and preferred time slot in seconds."
+        "title": "Book a slot",
+        "text": "Choose your date and preferred time in seconds."
       },
       {
-        "title": "Get Consultation",
-        "text": "Track progress and stay updated until treatment is completed."
+        "title": "Job completed",
+        "text": "Track progress and stay updated until the work is completed."
       }
     ],
     "faqItems": [
       {
-        "q": "How do I book a doctor?",
-        "a": "Go to Doctors, open a doctor detail page, choose date/time slot, and confirm booking."
+        "q": "How do I book a worker?",
+        "a": "Go to Find Workers, open a profile, choose a date and time slot, and confirm your booking."
       },
       {
-        "q": "Are doctors verified on Perscripto?",
-        "a": "Yes, listed doctors are verified before they become available for patient bookings."
+        "q": "Are workers verified on Worker Zone?",
+        "a": "Yes. Listed professionals are verified before they appear for client bookings."
       },
       {
         "q": "Can I pay online for appointments?",
@@ -115,44 +154,44 @@
     "testimonials": [
       {
         "name": "Ali Raza",
-        "role": "Patient",
-        "content": "Perscripto made booking doctor appointments very easy. Doctors are punctual and consultations are professional."
+        "role": "Homeowner",
+        "content": "Worker Zone made booking a reliable electrician effortless. They showed up on time and the work was professional."
       },
       {
         "name": "Fatima Ahmed",
-        "role": "Patient",
-        "content": "I loved the WhatsApp notifications. I get reminders for every appointment booking, which is very helpful."
+        "role": "Client",
+        "content": "I loved the WhatsApp notifications. I get reminders for every booking, which is very helpful."
       },
       {
         "name": "Usman Khan",
-        "role": "Patient",
-        "content": "The interface is simple and user-friendly. I can easily book doctors for my medical consultations."
+        "role": "Client",
+        "content": "The interface is simple and user-friendly. I can easily book plumbers and carpenters for home jobs."
       },
       {
         "name": "Ayesha Malik",
-        "role": "Patient",
-        "content": "Seeing the security features gave me confidence that my personal information is safe."
+        "role": "Client",
+        "content": "Seeing verification and reviews gave me confidence that my project was in safe hands."
       },
       {
         "name": "Hassan Ali",
-        "role": "Patient",
-        "content": "The online booking system is very fast and there is a wide selection of doctors."
+        "role": "Client",
+        "content": "The online booking system is very fast and there is a wide selection of skilled workers."
       }
     ],
     "topSpecs": [
-      "General Physician",
-      "Cardiologist",
-      "Dermatologist",
-      "Pediatrician",
-      "Neurologist",
-      "Orthopedic Surgeon"
+      "General Handyman",
+      "Electrician",
+      "Plumber",
+      "Carpenter",
+      "Painter",
+      "HVAC Technician"
     ]
   },
   "why": {
     "features": {
       "verified": {
-        "title": "Verified Doctors",
-        "description": "All listed doctors are verified so patients can book with confidence."
+        "title": "Verified workers",
+        "description": "All listed professionals are verified so clients can book with confidence."
       },
       "booking": {
         "title": "Easy Service Booking",
@@ -177,10 +216,10 @@
     }
   },
   "auth": {
-    "careFirst": "Care First, On Time",
+    "careFirst": "Quality work, on time",
     "startJourneyLine1": "Start your",
     "startJourneyLine2": "journey",
-    "brandSubtitle": "Join thousands of doctors and patients who trust Perscripto for reliable appointment bookings.",
+    "brandSubtitle": "Join thousands of workers and clients who trust Worker Zone for reliable service bookings.",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "emailPlaceholder": "Enter your email",
@@ -190,56 +229,64 @@
     "registerBtn": "Register",
     "notMember": "Not a member?",
     "alreadyMember": "Already a member?",
-    "joinPatient": "Join as Patient",
-    "joinDoctor": "Join as Doctor",
+    "joinPatient": "Join as client",
+    "joinDoctor": "Join as worker",
     "fullName": "Full Name",
     "phone": "Phone Number",
     "selectRole": "Select Role",
-    "selectSpecialization": "Select medical specialization",
+    "selectSpecialization": "Select trade or service category",
     "yearsExperience": "Years of Experience",
-    "photoHeadshot": "Professional Photo (Headshot)",
+    "photoHeadshot": "Professional photo (profile)",
     "certification": "Certification (PDF/Image)",
     "termsAgree": "Agreed to",
     "termsLink": "Terms and Conditions",
     "orContinueWith": "Or continue with",
     "continueGoogle": "Continue with Google",
     "connecting": "Connecting…",
-    "googlePatientOnly": "Google sign-up is for patients only. Please complete the doctor registration above.",
-    "welcomeBack": "Welcome back to Perscripto",
-    "welcome": "Welcome to Perscripto",
+    "googlePatientOnly": "Google sign-up is for clients only. Please complete the worker registration above.",
+    "welcomeBack": "Welcome back to Worker Zone",
+    "welcome": "Welcome to Worker Zone",
     "authFailed": "Authentication failed",
     "registrationFailed": "Registration failed",
     "termsRequired": "Please agree to the Terms and Conditions",
-    "googleOnlyPatients": "Google sign-up is only available for patients. Doctors must register with documents.",
+    "googleOnlyPatients": "Google sign-up is only available for clients. Workers must register with documents.",
     "googleFailed": "Google sign-up failed",
-    "titlePatientGoogle": "Switch to Patient to sign up with Google",
+    "titlePatientGoogle": "Switch to client to sign up with Google",
     "titleAcceptTerms": "Accept the terms above, then click to continue",
     "imageSizeError": "Image must be at least 400x400 pixels",
     "imageRatioError": "Please upload a square or portrait image (Aspect Ratio 1:1 or 4:5)",
+    "locationSection": "Location",
+    "locationCityPh": "City or area",
+    "locationAddressPh": "Street or work area (optional)",
+    "useMyLocation": "Use my current location",
+    "geoNotSupported": "This browser does not support location.",
+    "geoResolving": "Looking up your address…",
+    "geoSuccess": "Location saved from your device.",
+    "geoDenied": "Could not read your location. Check browser permissions.",
     "verificationTitle": "Account Under Verification",
-    "verificationBody": "Thank you for joining Perscripto! Your professional credentials have been submitted for review.",
-    "verificationWait": "Please wait for admin approval (usually 24-48 hours) before you can access your doctor dashboard.",
+    "verificationBody": "Thank you for joining Worker Zone! Your professional credentials have been submitted for review.",
+    "verificationWait": "Please wait for admin approval (usually 24-48 hours) before you can access your worker dashboard.",
     "goToLogin": "Go to Login"
   },
   "about": {
-    "heroTitle": "About Perscripto",
-    "heroLead": "Perscripto is an innovative online healthcare platform designed to simplify how people find trusted doctors. We bridge the gap between patients and medical professionals with technology.",
-    "journeyTitle": "Our Journey",
-    "journeyP1": "In today’s fast-paced world, finding the right doctor and booking a consultation can often be time-consuming and stressful. Perscripto aims to eliminate these challenges by providing a seamless, reliable, and user-friendly solution for patients and doctors.",
-    "journeyP2": "Our platform allows patients to easily search for qualified doctors, explore specializations, view availability, and book appointments in just a few clicks. Whether it is a routine check-up or specialist consultation, Perscripto keeps quality healthcare within your reach.",
-    "journeyP3": "We are committed to maintaining high standards of quality and trust. Every doctor on our platform goes through a verification process to ensure patients receive reliable care from experienced and certified professionals.",
-    "offerTitle": "What We Offer",
-    "visionTitle": "Our Vision",
-    "visionText": "Our vision is to become a trusted digital healthcare partner by making qualified doctors accessible to everyone, anytime and anywhere.",
-    "missionTitle": "Our Mission",
-    "missionText": "Our mission is to improve patient experience by providing a smart, reliable, and efficient appointment system that connects people with the right doctors without delay.",
-    "ctaTitle": "Ready to book your first appointment?",
-    "findDoctor": "Find a Doctor",
+    "heroTitle": "About Worker Zone",
+    "heroLead": "Worker Zone is an online platform that makes it easy to find trusted tradespeople for home and onsite jobs. We connect clients with skilled workers through simple booking and clear communication.",
+    "journeyTitle": "Our journey",
+    "journeyP1": "Finding the right person for repairs, installs, or maintenance can take time and phone tag. Worker Zone exists to make that faster: search by trade, compare profiles, and book a slot in a few clicks.",
+    "journeyP2": "Clients can explore worker profiles, see availability, and book services without hassle. From small fixes to larger projects, we help you reach qualified professionals when you need them.",
+    "journeyP3": "We take trust seriously. Workers on the platform go through verification so clients can book with confidence and know who is coming to the job.",
+    "offerTitle": "What we offer",
+    "visionTitle": "Our vision",
+    "visionText": "Our vision is to be a trusted digital partner for everyday jobs by making skilled workers easier to find, book, and pay—anytime, anywhere.",
+    "missionTitle": "Our mission",
+    "missionText": "Our mission is to improve the booking experience with a smart, reliable system that connects people with the right worker without unnecessary delay.",
+    "ctaTitle": "Ready to book your first job?",
+    "findDoctor": "Find a worker",
     "joinNow": "Join Now",
     "offers": [
-      "Easy and quick online doctor booking",
-      "Access to verified and experienced doctors",
-      "Multiple service categories in one platform",
+      "Easy and quick online worker booking",
+      "Access to verified and experienced tradespeople",
+      "Multiple trades and services in one platform",
       "Secure and user-friendly interface",
       "Time-saving and hassle-free experience"
     ]
@@ -247,10 +294,10 @@
   "contact": {
     "badge": "Get In Touch",
     "title": "Contact Us",
-    "lead": "Have questions about Perscripto? Our team is here to help with appointments and account support.",
+    "lead": "Have questions about Worker Zone? Our team is here to help with bookings and account support.",
     "helpTitle": "How can we help?",
-    "helpText": "Whether you are a patient looking for a trusted doctor or a professional interested in joining our platform, we are ready to assist you.",
-    "mapTitle": "Perscripto Location",
+    "helpText": "Whether you are a client looking for a trusted worker or a professional interested in joining our platform, we are ready to assist you.",
+    "mapTitle": "Worker Zone location",
     "formTitle": "Send us a Message",
     "fullName": "Full Name",
     "email": "Email Address",
@@ -270,17 +317,20 @@
     "hoursValue": "Mon - Fri, 9am - 6pm"
   },
   "doctors": {
-    "pageTitle": "Find the Right Doctor",
-    "pageSubtitle": "Search through our verified network of skilled professionals.",
+    "pageTitle": "Find the right worker",
+    "pageSubtitle": "Search through our verified network of skilled tradespeople.",
     "searchPlaceholder": "Search by name, skill, or service...",
     "experiencePh": "Experience",
     "availabilityPh": "Availability",
     "reset": "Reset",
     "searchBtn": "Search",
-    "fetching": "Fetching verified doctors...",
-    "loadError": "Unable to load doctors",
-    "emptyTitle": "No doctors match your criteria",
-    "emptyText": "We could not find any doctors matching your search. Try changing the category or clearing your search.",
+    "nearMeTooltip": "Show workers near your current location",
+    "clearNearTooltip": "Show all locations",
+    "nearMeOn": "Showing nearby workers.",
+    "fetching": "Fetching verified workers...",
+    "loadError": "Unable to load workers",
+    "emptyTitle": "No workers match your criteria",
+    "emptyText": "We could not find any workers matching your search. Try changing the category or clearing your search.",
     "exp": {
       "all": "All",
       "range05": "0–5 years",
@@ -312,14 +362,60 @@
   "terms": {
     "badge": "Legal Documentation",
     "title": "Terms and Conditions",
-    "subtitle": "Please read these terms carefully before using our platform. By accessing Perscripto, you agree to be bound by these legal guidelines.",
+    "subtitle": "Please read these terms carefully before using our platform. By accessing Worker Zone, you agree to be bound by these legal guidelines.",
     "sidebarNote": "Detailed clauses below are provided in English for legal accuracy.",
     "quickNav": "Quick Navigation",
     "needHelp": "Need help?",
     "support247": "Our support team is here for you 24/7.",
     "contactSupportLink": "Contact Support",
     "acceptanceTitle": "Acceptance of Terms",
-    "acceptanceBody": "By continuing to use Perscripto, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.",
+    "acceptanceBody": "By continuing to use Worker Zone, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.",
     "lastUpdated": "Last Updated: April 26, 2026"
+  },
+  "doctorDetail": {
+    "loadError": "Unable to load worker details",
+    "loginToBook": "Please log in as a client to book a service.",
+    "onlyClientsBook": "Only client accounts can book services.",
+    "experience": "Experience",
+    "years": "{{n}} years",
+    "serviceRate": "Service rate",
+    "avgRating": "Average rating",
+    "totalReviews": "Total reviews",
+    "aboutTitle": "About this professional",
+    "noBio": "No bio provided yet.",
+    "bookService": "Book service",
+    "backToList": "Back to workers"
+  },
+  "doctorReviews": {
+    "title": "Reviews",
+    "subtitle": "Real feedback from clients.",
+    "empty": "No client reviews yet.",
+    "unnamedClient": "Client",
+    "noComment": "No comment provided.",
+    "workerResponse": "Worker response"
+  },
+  "workerTrades": {
+    "general_handyman": "General Handyman",
+    "electrician": "Electrician",
+    "plumber": "Plumber",
+    "carpenter": "Carpenter",
+    "painter": "Painter",
+    "mason_and_tiler": "Mason & Tiler",
+    "hvac_technician": "HVAC Technician",
+    "welder": "Welder",
+    "roofer": "Roofer",
+    "locksmith": "Locksmith",
+    "appliance_repair": "Appliance Repair",
+    "pest_control": "Pest Control",
+    "deep_cleaner": "Deep Cleaner",
+    "gardener_and_landscaper": "Gardener & Landscaper",
+    "moving_and_packing": "Moving & Packing",
+    "security_system_installer": "Security System Installer",
+    "cctv_and_alarm_technician": "CCTV & Alarm Technician",
+    "auto_mechanic": "Auto Mechanic",
+    "steel_fabricator": "Steel Fabricator",
+    "scaffold_worker": "Scaffold Worker",
+    "general_laborer": "General Laborer",
+    "glass_and_aluminum_installer": "Glass & Aluminum Installer"
   }
 }

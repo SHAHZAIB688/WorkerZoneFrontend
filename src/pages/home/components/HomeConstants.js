@@ -1,64 +1,64 @@
 export const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1504917595217-d43dc535aa14?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80",
 ];
 
 export const TOP_SPECIALITIES = [
-  "General Physician",
-  "Cardiologist",
-  "Dermatologist",
-  "Pediatrician",
-  "Neurologist",
-  "Orthopedic Surgeon",
+  "General Handyman",
+  "Electrician",
+  "Plumber",
+  "Carpenter",
+  "Painter",
+  "HVAC Technician",
 ];
 
-/** Doctor registration & profile specialization options (medical — not trade/worker categories) */
+/** Worker registration & profile trade options (kept in sync with backend doctor specializations list). */
 export const DOCTOR_SIGNUP_SPECIALIZATIONS = [
-  "General Physician",
-  "Family Medicine",
-  "Internal Medicine",
-  "Cardiologist",
-  "Dermatologist",
-  "Pediatrician",
-  "Neurologist",
-  "Orthopedic Surgeon",
-  "Psychiatrist",
-  "Gynecologist",
-  "ENT Specialist",
-  "Ophthalmologist",
-  "Urologist",
-  "Oncologist",
-  "Gastroenterologist",
-  "Pulmonologist",
-  "Endocrinologist",
-  "Nephrologist",
-  "Rheumatologist",
-  "Radiologist",
-  "Anesthesiologist",
-  "General Surgeon",
+  "General Handyman",
+  "Electrician",
+  "Plumber",
+  "Carpenter",
+  "Painter",
+  "Mason & Tiler",
+  "HVAC Technician",
+  "Welder",
+  "Roofer",
+  "Locksmith",
+  "Appliance Repair",
+  "Pest Control",
+  "Deep Cleaner",
+  "Gardener & Landscaper",
+  "Moving & Packing",
+  "Security System Installer",
+  "CCTV & Alarm Technician",
+  "Auto Mechanic",
+  "Steel Fabricator",
+  "Scaffold Worker",
+  "General Laborer",
+  "Glass & Aluminum Installer",
 ];
 
 export const HOW_IT_WORKS_STEPS = [
-  { title: "Search Doctors", text: "Browse qualified doctors by specialization, ratings, and availability." },
-  { title: "Review Profile", text: "Check experience, consultation fee, and patient feedback before booking." },
-  { title: "Book Appointment", text: "Choose your date and preferred time slot in seconds." },
-  { title: "Get Consultation", text: "Track progress and stay updated until treatment is completed." },
+  { title: "Search Workers", text: "Browse verified tradespeople by trade, ratings, and availability." },
+  { title: "Review Profile", text: "Check experience, service rate, and client feedback before booking." },
+  { title: "Book a Slot", text: "Choose your date and preferred time in seconds." },
+  { title: "Get the Job Done", text: "Track your booking and stay updated until the work is completed." },
 ];
 
 export const FAQ_ITEMS = [
   {
-    q: "How do I book a doctor?",
-    a: "Go to Doctors, open a doctor detail page, choose date/time slot, and confirm booking.",
+    q: "How do I book a worker?",
+    a: "Go to Find Workers, open a profile, pick a date and time slot, and confirm your booking.",
   },
   {
-    q: "Are doctors verified on Perscripto?",
-    a: "Yes, listed doctors are verified before they become available for patient bookings.",
+    q: "Are workers verified on Worker Zone?",
+    a: "Yes. Listed professionals are verified before they appear for client bookings.",
   },
   {
-    q: "Can I pay online for appointments?",
-    a: "Yes, Stripe checkout is integrated for secure online appointment payments.",
+    q: "Can I pay online for bookings?",
+    a: "Yes, Stripe checkout is integrated for secure online payments.",
   },
   {
     q: "Can I update my profile details anytime?",
@@ -69,42 +69,42 @@ export const FAQ_ITEMS = [
 export const TESTIMONIALS = [
   {
     name: "Ali Raza",
-    role: "Patient",
+    role: "Homeowner",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
     content:
-      "Perscripto ne doctor appointments book karna bohat easy bana diya hai. Doctors time par available hote hain aur consultation professional hoti hai.",
+      "Worker Zone made booking a reliable electrician effortless. They showed up on time and the work was professional.",
     rating: 5,
   },
   {
     name: "Fatima Ahmed",
-    role: "Patient",
+    role: "Client",
     image: "https://randomuser.me/api/portraits/women/44.jpg",
     content:
-      "Mujhe WhatsApp notifications ka feature bohat pasand aaya. Har appointment booking ka reminder mil jata hai, jo bohat helpful hai.",
+      "I loved the WhatsApp reminders for every booking. It is very helpful when you are juggling repairs at home.",
     rating: 5,
   },
   {
     name: "Usman Khan",
-    role: "Patient",
+    role: "Client",
     image: "https://randomuser.me/api/portraits/men/76.jpg",
     content:
-      "Interface simple aur user-friendly hai. Main easily apni medical consultation ke liye doctors book kar leta hoon. Bohat acha system hai.",
+      "The interface is simple. I can quickly find plumbers and carpenters without calling around for days.",
     rating: 4,
   },
   {
     name: "Ayesha Malik",
-    role: "Patient",
+    role: "Client",
     image: "https://randomuser.me/api/portraits/women/68.jpg",
     content:
-      "Security features dekh kar mujhe confidence mila ke meri personal information safe hai. Yeh ek modern aur reliable doctor appointment platform hai.",
+      "Seeing verification and reviews gave me confidence that my home project was in safe hands.",
     rating: 5,
   },
   {
     name: "Hassan Ali",
-    role: "Patient",
+    role: "Client",
     image: "https://randomuser.me/api/portraits/men/51.jpg",
     content:
-      "Online booking system bohat fast hai aur doctors ka selection bhi wide hai. Time aur effort dono bach jate hain.",
+      "Online booking is fast and there is a wide choice of skilled workers for different trades.",
     rating: 4,
   },
 ];

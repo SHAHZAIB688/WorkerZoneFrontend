@@ -8,7 +8,7 @@ const AuthBrandPanel = ({ logoSrc }) => {
         <div className="flex items-center gap-3">
           <img src={logoSrc} alt="" className="h-10 w-10 rounded-xl bg-white/10 p-1" />
           <div>
-            <h2 className="text-xl font-bold tracking-tight">Perscripto</h2>
+            <h2 className="text-xl font-bold tracking-tight">{t("brand.name")}</h2>
             <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">{t("auth.careFirst")}</p>
           </div>
         </div>

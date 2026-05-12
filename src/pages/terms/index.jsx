@@ -60,7 +60,7 @@ const TermsPage = () => {
               <div className="rounded-2xl bg-brand-50 p-5 text-center">
                 <p className="mb-1 text-xs font-bold text-brand-600">{t("terms.needHelp")}</p>
                 <p className="mb-3 text-[10px] text-brand-500">{t("terms.support247")}</p>
-                <a href="mailto:mawaisacu@gmail.com" className="text-xs font-bold text-brand-700 underline">
+                <a href="mailto:workerzone@gmail.com" className="text-xs font-bold text-brand-700 underline">
                   {t("terms.contactSupportLink")}
                 </a>
               </div>

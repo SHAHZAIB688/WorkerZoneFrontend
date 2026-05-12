@@ -14,7 +14,7 @@ const DashboardSidebar = ({ navItems, activeTab, onTabChange, onLogout, isOpen }
       <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center justify-center gap-1 w-full">
           <img src={sidebarLogo} alt={t("dash.sidebar.logoAlt")} className="h-10 w-10 object-contain" />
-          <span className="-ml-1 text-[26px] font-bold leading-none tracking-tight">Perscripto</span>
+          <span className="-ml-1 text-[26px] font-bold leading-none tracking-tight">{t("brand.name")}</span>
         </div>
       </div>
 

@@ -13,6 +13,7 @@ import TestimonialsSection from "./components/TestimonialsSection";
 import FaqSection from "./components/FaqSection";
 import CtaSection from "./components/CtaSection";
 import { HERO_IMAGES, TOP_SPECIALITIES, TESTIMONIALS } from "./components/HomeConstants";
+import { translateWorkerTrade } from "../../utils/workerTradeLabels";
 
 const HomePage = () => {
   const { t, i18n } = useTranslation();
@@ -50,14 +51,14 @@ const HomePage = () => {
     [testimonialTexts]
   );
 
-  const topSpecialityItems = useMemo(() => {
-    const labels = t("home.topSpecs", { returnObjects: true });
-    if (!Array.isArray(labels)) return TOP_SPECIALITIES.map((queryValue) => ({ queryValue, label: queryValue }));
-    return TOP_SPECIALITIES.map((queryValue, i) => ({
-      queryValue,
-      label: labels[i] || queryValue,
-    }));
-  }, [t, i18n.language]);
+  const topSpecialityItems = useMemo(
+    () =>
+      TOP_SPECIALITIES.map((queryValue) => ({
+        queryValue,
+        label: translateWorkerTrade(t, queryValue),
+      })),
+    [t, i18n.language]
+  );
 
   useEffect(() => {
     const timer = setInterval(() => {

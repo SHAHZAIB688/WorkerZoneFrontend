@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Dropdown from "../../../components/Dropdown";
+import { translateWorkerTrade } from "../../../utils/workerTradeLabels";
 
 const PatientBookingModal = ({
   open,
@@ -37,7 +38,7 @@ const PatientBookingModal = ({
               { value: "", label: t("dash.patient.bookingModal.selectDoctor") },
               ...doctors.map((d) => ({
                 value: d._id,
-                label: `${d.user?.name} — ${d.specialization}`,
+                label: `${d.user?.name} — ${translateWorkerTrade(t, d.specialization)}`,
               })),
             ]}
             value={form.doctorProfileId}

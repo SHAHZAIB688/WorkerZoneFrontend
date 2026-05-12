@@ -12,6 +12,8 @@ import Dropdown from "../../components/Dropdown";
 import AuthBrandPanel from "../auth/components/AuthBrandPanel";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
+import { translateWorkerTrade } from "../../utils/workerTradeLabels";
+import { resolveDeviceLocationForForm } from "../../utils/reverseGeocode";
 
 const SignupPage = () => {
   const { t, i18n } = useTranslation();
@@ -21,12 +23,17 @@ const SignupPage = () => {
     phone: "",
     password: "",
     role: "patient",
-    specialization: "General Physician",
+    specialization: "General Handyman",
     experience: "",
     degreeFile: null,
+    locationCity: "",
+    locationAddress: "",
+    locationLat: "",
+    locationLng: "",
   });
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [geoWorking, setGeoWorking] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [doctorSpecializations, setDoctorSpecializations] = useState(DOCTOR_SIGNUP_SPECIALIZATIONS);
@@ -39,6 +46,15 @@ const SignupPage = () => {
       { value: "doctor", label: t("auth.joinDoctor") },
     ],
     [t, i18n.language]
+  );
+
+  const specializationOptions = useMemo(
+    () =>
+      doctorSpecializations.map((spec) => ({
+        value: spec,
+        label: translateWorkerTrade(t, spec),
+      })),
+    [doctorSpecializations, t, i18n.language]
   );
 
   useEffect(() => {
@@ -93,6 +109,36 @@ const SignupPage = () => {
 
   const onDropdownChange = (name, value) => {
     setForm((p) => ({ ...p, [name]: value }));
+  };
+
+  const fillLocationFromBrowser = async () => {
+    if (!navigator.geolocation) {
+      toast.error(t("auth.geoNotSupported"));
+      return;
+    }
+    setGeoWorking(true);
+    const toastId = toast.loading(t("auth.geoResolving"));
+    try {
+      const result = await resolveDeviceLocationForForm(i18n.language);
+      toast.dismiss(toastId);
+      if (!result) {
+        toast.error(t("auth.geoDenied"));
+        return;
+      }
+      setForm((p) => ({
+        ...p,
+        locationLat: result.lat,
+        locationLng: result.lng,
+        locationCity: result.locationCity || p.locationCity,
+        locationAddress: result.locationAddress || p.locationAddress,
+      }));
+      toast.success(t("auth.geoSuccess"));
+    } catch {
+      toast.dismiss(toastId);
+      toast.error(t("auth.geoDenied"));
+    } finally {
+      setGeoWorking(false);
+    }
   };
 
   const onSubmit = async (e) => {
@@ -203,6 +249,36 @@ const SignupPage = () => {
               className="w-full border-b border-slate-200 py-2 text-sm outline-none transition-colors focus:border-brand-600 sm:py-3"
             />
 
+            <div className="space-y-2 rounded-xl border border-slate-100 bg-slate-50/80 p-3 sm:p-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{t("auth.locationSection")}</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input
+                  name="locationCity"
+                  placeholder={t("auth.locationCityPh")}
+                  value={form.locationCity}
+                  onChange={onChange}
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-brand-600"
+                />
+                <input
+                  name="locationAddress"
+                  placeholder={t("auth.locationAddressPh")}
+                  value={form.locationAddress}
+                  onChange={onChange}
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-brand-600 sm:col-span-2"
+                />
+              </div>
+              <div className="mt-1">
+                <button
+                  type="button"
+                  onClick={() => void fillLocationFromBrowser()}
+                  disabled={geoWorking}
+                  className="rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-semibold text-brand-700 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {geoWorking ? t("auth.geoResolving") : t("auth.useMyLocation")}
+                </button>
+              </div>
+            </div>
+
             <Dropdown
               options={rolesOptions}
               value={form.role}
@@ -225,7 +301,7 @@ const SignupPage = () => {
             {form.role === "doctor" && (
               <div className="grid animate-in slide-in-from-left-2 gap-4">
                 <Dropdown
-                  options={doctorSpecializations}
+                  options={specializationOptions}
                   value={form.specialization}
                   onChange={(val) => onDropdownChange("specialization", val)}
                   placeholder={t("auth.selectSpecialization")}

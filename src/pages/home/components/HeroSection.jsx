@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 const HeroSection = ({ heroImages, currentImage }) => {
   const { t } = useTranslation();
   return (
-    <section className="overflow-hidden rounded-3xl bg-gradient-to-r from-brand-700 via-brand-600 to-cyan-600 px-6 py-12 text-white shadow-xl lg:px-12">
+    <section className="overflow-hidden rounded-3xl bg-gradient-to-r from-brand-700 via-brand-600 to-cyan-600 px-4 py-10 text-white shadow-xl sm:px-6 sm:py-12 lg:px-12">
       <div className="grid items-center gap-8 lg:grid-cols-2">
         <div>
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-cyan-100">{t("home.heroBadge")}</p>
-          <h1 className="text-3xl font-bold leading-tight md:text-5xl">{t("home.heroTitle")}</h1>
+          <h1 className="text-2xl font-bold leading-tight sm:text-3xl md:text-5xl">{t("home.heroTitle")}</h1>
           <p className="mt-4 max-w-xl text-base text-cyan-50 md:text-lg">{t("home.heroSubtitle")}</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link

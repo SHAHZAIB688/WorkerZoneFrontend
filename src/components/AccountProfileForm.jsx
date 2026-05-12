@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import patient from "../api/client";
 import Loader from "./Loader";
+import { resolveDeviceLocationForForm } from "../utils/reverseGeocode";
+import { useBrowserLocation } from "../state/BrowserLocationContext";
 
 const AccountProfileForm = ({
   refreshUser,
@@ -12,12 +14,16 @@ const AccountProfileForm = ({
   idPrefix = "account",
   sectionClassName = "",
   loaderClassName = "flex min-h-[240px] items-center justify-center rounded-2xl border border-slate-200 bg-white",
+  /** When true, reverse-geocode into city/street after GPS (patient & worker dashboards). Admins pass false. */
+  resolveAddressFromCoords = true,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { selectPresetLocation } = useBrowserLocation();
   const heading = title ?? t("dash.accountForm.sectionTitle");
   const sub = description ?? t("dash.accountForm.sectionDescription");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [geoWorking, setGeoWorking] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -25,6 +31,10 @@ const AccountProfileForm = ({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
+    locationCity: "",
+    locationAddress: "",
+    locationLat: "",
+    locationLng: "",
   });
 
   useEffect(() => {
@@ -38,6 +48,10 @@ const AccountProfileForm = ({
           name: data.name || "",
           email: data.email || "",
           phone: data.phone || "",
+          locationCity: data.locationCity || "",
+          locationAddress: data.locationAddress || "",
+          locationLat: data.locationLat != null && data.locationLat !== "" ? String(data.locationLat) : "",
+          locationLng: data.locationLng != null && data.locationLng !== "" ? String(data.locationLng) : "",
         }));
       } catch {
         toast.error(t("dash.accountForm.loadFail"));
@@ -73,13 +87,23 @@ const AccountProfileForm = ({
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
+        locationCity: form.locationCity.trim(),
+        locationAddress: form.locationAddress.trim(),
+        locationLat: form.locationLat === "" || form.locationLat == null ? null : Number(form.locationLat),
+        locationLng: form.locationLng === "" || form.locationLng == null ? null : Number(form.locationLng),
       };
+      if (payload.locationLat !== null && !Number.isFinite(payload.locationLat)) delete payload.locationLat;
+      if (payload.locationLng !== null && !Number.isFinite(payload.locationLng)) delete payload.locationLng;
       if (form.newPassword) {
         payload.currentPassword = form.currentPassword;
         payload.newPassword = form.newPassword;
       }
       await patient.put("/auth/profile", payload);
       toast.success(t("dash.accountForm.updated"));
+      if (resolveAddressFromCoords && payload.locationLat != null && payload.locationLng != null) {
+        const line = [payload.locationCity, payload.locationAddress].filter(Boolean).join(", ");
+        selectPresetLocation(payload.locationLat, payload.locationLng, line || undefined);
+      }
       await refreshUser();
       onSaved?.();
       setForm((prev) => ({
@@ -92,6 +116,60 @@ const AccountProfileForm = ({
       toast.error(err.response?.data?.message || t("dash.accountForm.updateFail"));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const fillLocationFromBrowser = async () => {
+    if (!navigator.geolocation) {
+      toast.error(t("auth.geoNotSupported"));
+      return;
+    }
+    setGeoWorking(true);
+    const toastId = toast.loading(t("auth.geoResolving"));
+    try {
+      if (resolveAddressFromCoords) {
+        const result = await resolveDeviceLocationForForm(i18n.language);
+        toast.dismiss(toastId);
+        if (!result) {
+          toast.error(t("auth.geoDenied"));
+          return;
+        }
+        setForm((p) => ({
+          ...p,
+          locationLat: String(result.lat),
+          locationLng: String(result.lng),
+          locationCity: result.locationCity || p.locationCity,
+          locationAddress: result.locationAddress || p.locationAddress,
+        }));
+      } else {
+        const coords = await new Promise((resolve) => {
+          navigator.geolocation.getCurrentPosition(
+            (pos) =>
+              resolve({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+              }),
+            () => resolve(null),
+            { enableHighAccuracy: false, timeout: 15000, maximumAge: 0 }
+          );
+        });
+        toast.dismiss(toastId);
+        if (!coords) {
+          toast.error(t("auth.geoDenied"));
+          return;
+        }
+        setForm((p) => ({
+          ...p,
+          locationLat: String(coords.lat),
+          locationLng: String(coords.lng),
+        }));
+      }
+      toast.success(t("auth.geoSuccess"));
+    } catch {
+      toast.dismiss(toastId);
+      toast.error(t("auth.geoDenied"));
+    } finally {
+      setGeoWorking(false);
     }
   };
 
@@ -151,6 +229,47 @@ const AccountProfileForm = ({
             onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
             className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
           />
+        </div>
+
+        <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+          <p className="text-sm font-semibold text-slate-800">{t("dash.accountForm.locationTitle")}</p>
+          <p className="mt-0.5 text-xs text-slate-500">{t("dash.accountForm.locationHint")}</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div className="sm:col-span-1">
+              <label htmlFor={pid("location-city")} className="mb-1 block text-xs font-medium text-slate-600">
+                {t("dash.accountForm.locationCity")}
+              </label>
+              <input
+                id={pid("location-city")}
+                type="text"
+                value={form.locationCity}
+                onChange={(e) => setForm((p) => ({ ...p, locationCity: e.target.value }))}
+                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor={pid("location-address")} className="mb-1 block text-xs font-medium text-slate-600">
+                {t("dash.accountForm.locationAddress")}
+              </label>
+              <input
+                id={pid("location-address")}
+                type="text"
+                value={form.locationAddress}
+                onChange={(e) => setForm((p) => ({ ...p, locationAddress: e.target.value }))}
+                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+              />
+            </div>
+          </div>
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => void fillLocationFromBrowser()}
+              disabled={geoWorking}
+              className="rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-xs font-semibold text-brand-700 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {geoWorking ? t("auth.geoResolving") : t("auth.useMyLocation")}
+            </button>
+          </div>
         </div>
 
         <div className="border-t border-slate-100 pt-4">

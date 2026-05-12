@@ -17,7 +17,7 @@ const ContactPage = () => {
     e.preventDefault();
     setLoading(true);
 
-    const whatsappMsg = `Hi Perscripto Team! \n\nI am *${form.name}*.\n*Email:* ${form.email}\n*Subject:* ${form.subject}\n\n*Message:* ${form.message}`;
+    const whatsappMsg = `Hi ${t("brand.name")} team! \n\nI am *${form.name}*.\n*Email:* ${form.email}\n*Subject:* ${form.subject}\n\n*Message:* ${form.message}`;
     const whatsappUrl = `https://wa.me/923081830956?text=${encodeURIComponent(whatsappMsg)}`;
 
     setTimeout(() => {

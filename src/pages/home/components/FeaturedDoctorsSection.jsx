@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { buildBackendAssetUrl } from "../../../api/client";
 import Loader from "../../../components/Loader";
+import { translateWorkerTrade } from "../../../utils/workerTradeLabels";
 
 const FeaturedDoctorsSection = ({ loadingDoctors, featuredDoctors, formatConsultationFee }) => {
   const { t } = useTranslation();
@@ -26,13 +27,13 @@ const FeaturedDoctorsSection = ({ loadingDoctors, featuredDoctors, formatConsult
                 src={
                   doctor.image
                     ? buildBackendAssetUrl(doctor.image)
-                    : `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(doctor.user?.name || "Doctor")}`
+                    : `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(doctor.user?.name || t("common.unnamedWorker"))}`
                 }
-                alt={doctor.user?.name || "Doctor"}
+                alt={doctor.user?.name || t("common.unnamedWorker")}
                 className="h-44 w-full rounded-xl bg-slate-100 object-cover"
               />
               <h3 className="mt-4 text-lg font-bold text-slate-900">{doctor.user?.name}</h3>
-              <p className="text-sm text-brand-700">{doctor.specialization}</p>
+              <p className="text-sm text-brand-700">{translateWorkerTrade(t, doctor.specialization)}</p>
               <div className="mt-3 space-y-1 text-sm text-slate-600">
                 <p>
                   {t("home.experience")}: {t("home.years", { n: doctor.experienceYears || 0 })}

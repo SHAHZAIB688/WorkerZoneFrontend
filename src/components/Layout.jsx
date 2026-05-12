@@ -20,7 +20,7 @@ const Layout = ({ children }) => {
   return (
     <div className="flex min-h-screen flex-col">
       {!hideLayout && <Header />}
-      <main className={hideLayout ? "m-0 w-full flex-1 p-0" : "mx-auto w-full max-w-7xl flex-1 px-4 py-6 lg:px-8"}>
+      <main className={hideLayout ? "m-0 w-full flex-1 p-0" : "mx-auto w-full min-w-0 max-w-7xl flex-1 px-3 py-5 sm:px-4 sm:py-6 lg:px-8"}>
         {children}
       </main>
       {!hideLayout && (
@@ -30,7 +30,7 @@ const Layout = ({ children }) => {
               <div className="space-y-6">
                 <div className="flex items-center gap-2">
                   <img src={LogoImg} alt={t("header.logoAlt")} className="h-10 w-10 rounded-lg" />
-                  <span className="text-xl font-extrabold tracking-tight text-brand-700">Perscripto</span>
+                  <span className="text-xl font-extrabold tracking-tight text-brand-700">{t("brand.name")}</span>
                 </div>
                 <p className="text-sm leading-relaxed text-slate-600">{t("footer.tagline")}</p>
                 <div className="flex gap-4">
@@ -94,11 +94,11 @@ const Layout = ({ children }) => {
                 <div className="space-y-3">
                   <p className="flex items-center gap-3 text-sm text-slate-600">
                     <MailIcon className="h-4 w-4 shrink-0 text-brand-600" />
-                    mawaisacu@gmail.com
+                    workerzone@gmail.com
                   </p>
                   <p className="flex items-center gap-3 text-sm text-slate-600">
                     <PhoneIcon className="h-4 w-4 shrink-0 text-brand-600" />
-                    +92 308 1830956
+                    +92 308 6423719
                   </p>
                   <p className="flex items-start gap-3 text-sm text-slate-600">
                     <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />

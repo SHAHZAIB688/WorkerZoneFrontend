@@ -12,10 +12,13 @@ import AccountProfileForm from "../../components/AccountProfileForm";
 import { DashboardIcon, AppointmentIcon, FileIcon, ProfileIcon, IconWrapper } from "../../components/icons";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../state/AuthContext";
+import { useBrowserLocation } from "../../state/BrowserLocationContext";
 import DoctorReplyModal from "./components/DoctorReplyModal";
 import VideoCall from "../../components/VideoCall";
 import Dropdown from "../../components/Dropdown";
 import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
+import { translateWorkerTrade } from "../../utils/workerTradeLabels";
+import { resolveDeviceLocationForForm } from "../../utils/reverseGeocode";
 
 const WEEKDAY_OPTIONS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 const DEFAULT_SLOT = { start: "09:00", end: "17:00" };
@@ -56,6 +59,7 @@ const normalizeSingleAvailability = (slots = []) => {
 const DoctorDashboard = () => {
   const { t } = useTranslation();
   const { refreshUser } = useAuth();
+  const { selectPresetLocation } = useBrowserLocation();
 
   const formatConsultationFee = useCallback(
     (fee) => {
@@ -69,12 +73,22 @@ const DoctorDashboard = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [editForm, setEditForm] = useState({ consultationFee: 0, bio: "", experienceYears: 0, specialization: "General Physician" });
+  const [editForm, setEditForm] = useState({
+    consultationFee: 0,
+    bio: "",
+    experienceYears: 0,
+    specialization: "General Handyman",
+    locationCity: "",
+    locationAddress: "",
+    locationLat: "",
+    locationLng: "",
+  });
   const [doctorSpecializations, setDoctorSpecializations] = useState(DOCTOR_SIGNUP_SPECIALIZATIONS);
   const [reviews, setReviews] = useState([]);
   const [replyModal, setReplyModal] = useState({ isOpen: false, reviewId: null, response: "" });
   const [prescriptionModal, setPrescriptionModal] = useState({ isOpen: false, appointment: null });
   const [videoCall, setVideoCall] = useState({ open: false, roomId: null });
+  const [practiceGeoWorking, setPracticeGeoWorking] = useState(false);
   const navigate = useNavigate();
 
   const loadProfile = async () => {
@@ -94,11 +108,45 @@ const DoctorDashboard = () => {
         consultationFee: data.consultationFee || 0,
         bio: data.bio || "",
         experienceYears: data.experienceYears || 0,
-        specialization: data.specialization || "General Physician",
+        specialization: data.specialization || "General Handyman",
+        locationCity: data.locationCity || "",
+        locationAddress: data.locationAddress || "",
+        locationLat: data.locationLat != null && data.locationLat !== "" ? String(data.locationLat) : "",
+        locationLng: data.locationLng != null && data.locationLng !== "" ? String(data.locationLng) : "",
       });
       setAvailability(normalizeSingleAvailability(data.availability || []));
     } catch (error) {
       toast.error(error.response?.data?.message || i18n.t("dash.doctor.toast.loadProfileFail"));
+    }
+  };
+
+  const fillPracticeLocationFromBrowser = async () => {
+    if (!navigator.geolocation) {
+      toast.error(t("auth.geoNotSupported"));
+      return;
+    }
+    setPracticeGeoWorking(true);
+    const toastId = toast.loading(t("auth.geoResolving"));
+    try {
+      const result = await resolveDeviceLocationForForm(i18n.language);
+      toast.dismiss(toastId);
+      if (!result) {
+        toast.error(t("auth.geoDenied"));
+        return;
+      }
+      setEditForm((p) => ({
+        ...p,
+        locationLat: String(result.lat),
+        locationLng: String(result.lng),
+        locationCity: result.locationCity || p.locationCity,
+        locationAddress: result.locationAddress || p.locationAddress,
+      }));
+      toast.success(t("auth.geoSuccess"));
+    } catch {
+      toast.dismiss(toastId);
+      toast.error(t("auth.geoDenied"));
+    } finally {
+      setPracticeGeoWorking(false);
     }
   };
 
@@ -109,10 +157,20 @@ const DoctorDashboard = () => {
         bio: String(editForm.bio || "").trim(),
         experienceYears: Number(editForm.experienceYears) || 0,
         specialization: String(editForm.specialization || "").trim(),
+        locationCity: String(editForm.locationCity || "").trim(),
+        locationAddress: String(editForm.locationAddress || "").trim(),
+        locationLat: editForm.locationLat === "" ? null : Number(editForm.locationLat),
+        locationLng: editForm.locationLng === "" ? null : Number(editForm.locationLng),
       };
+      if (payload.locationLat !== null && !Number.isFinite(payload.locationLat)) delete payload.locationLat;
+      if (payload.locationLng !== null && !Number.isFinite(payload.locationLng)) delete payload.locationLng;
       
       await patient.put("/doctors/profile", payload);
       toast.success(t("dash.doctor.toast.profileUpdated"));
+      if (payload.locationLat != null && payload.locationLng != null) {
+        const line = [payload.locationCity, payload.locationAddress].filter(Boolean).join(", ");
+        selectPresetLocation(payload.locationLat, payload.locationLng, line || undefined);
+      }
       setEditMode(false);
       await loadProfile();
     } catch (error) {
@@ -581,7 +639,11 @@ const DoctorDashboard = () => {
                             consultationFee: profile?.consultationFee || 0,
                             bio: profile?.bio || "",
                             experienceYears: profile?.experienceYears || 0,
-                            specialization: profile?.specialization || "General Physician",
+                            specialization: profile?.specialization || "General Handyman",
+                            locationCity: profile?.locationCity || "",
+                            locationAddress: profile?.locationAddress || "",
+                            locationLat: profile?.locationLat != null ? String(profile.locationLat) : "",
+                            locationLng: profile?.locationLng != null ? String(profile.locationLng) : "",
                           });
                         }}
                         className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
@@ -603,7 +665,8 @@ const DoctorDashboard = () => {
                         {!editMode ? (
                           <>
                             <p className="text-sm">
-                              <span className="font-semibold text-slate-700">{t("dash.doctor.specialization")}:</span> {profile?.specialization}
+                              <span className="font-semibold text-slate-700">{t("dash.doctor.specialization")}:</span>{" "}
+                              {translateWorkerTrade(t, profile?.specialization)}
                             </p>
                             <div className="flex items-center mt-2">
                               <span className="font-semibold text-slate-700 text-sm me-2">{t("dash.doctor.accountStatus")}:</span>
@@ -617,8 +680,11 @@ const DoctorDashboard = () => {
                             <div className="mb-3">
                               <label className="block text-xs font-semibold text-slate-700 mb-1">{t("dash.doctor.specialization")}</label>
                               <Dropdown
-                                options={doctorSpecializations.map((spec) => ({ value: spec, label: spec }))}
-                                value={editForm.specialization || "General Physician"}
+                                options={doctorSpecializations.map((spec) => ({
+                                  value: spec,
+                                  label: translateWorkerTrade(t, spec),
+                                }))}
+                                value={editForm.specialization || "General Handyman"}
                                 onChange={(val) => setEditForm({ ...editForm, specialization: val })}
                                 className="w-full h-10"
                               />
@@ -667,6 +733,49 @@ const DoctorDashboard = () => {
                                 onChange={(e) => setEditForm({ ...editForm, consultationFee: e.target.value })}
                               />
                             </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">{t("dash.doctor.practiceLocationTitle")}</h4>
+                      <div className="rounded-xl border border-slate-200 p-4">
+                        {!editMode ? (
+                          <div className="text-sm text-slate-600">
+                            <p>
+                              {[profile?.locationCity, profile?.locationAddress].filter(Boolean).join(" · ") ||
+                                t("dash.doctor.practiceLocationUnset")}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            <div>
+                              <label className="mb-1 block text-xs font-semibold text-slate-700">{t("dash.accountForm.locationCity")}</label>
+                              <input
+                                type="text"
+                                className="w-full rounded-lg border border-slate-300 p-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                                value={editForm.locationCity}
+                                onChange={(e) => setEditForm({ ...editForm, locationCity: e.target.value })}
+                              />
+                            </div>
+                            <div>
+                              <label className="mb-1 block text-xs font-semibold text-slate-700">{t("dash.accountForm.locationAddress")}</label>
+                              <input
+                                type="text"
+                                className="w-full rounded-lg border border-slate-300 p-2 text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                                value={editForm.locationAddress}
+                                onChange={(e) => setEditForm({ ...editForm, locationAddress: e.target.value })}
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => void fillPracticeLocationFromBrowser()}
+                              disabled={practiceGeoWorking}
+                              className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-800 hover:bg-brand-100 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              {practiceGeoWorking ? t("auth.geoResolving") : t("auth.useMyLocation")}
+                            </button>
                           </div>
                         )}
                       </div>

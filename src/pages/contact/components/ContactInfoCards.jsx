@@ -4,8 +4,8 @@ import { MailIcon, PhoneIcon, MapPinIcon, ClockIcon } from "../../../icons";
 const ContactInfoCards = () => {
   const { t } = useTranslation();
   const items = [
-    { icon: MailIcon, label: t("contact.cardEmail"), val: "mawaisacu@gmail.com" },
-    { icon: PhoneIcon, label: t("contact.cardPhone"), val: "+92 308 1830956" },
+    { icon: MailIcon, label: t("contact.cardEmail"), val: "workerzone@gmail.com" },
+    { icon: PhoneIcon, label: t("contact.cardPhone"), val: "+92 308 6423719" },
     { icon: MapPinIcon, label: t("contact.cardVisit"), val: "Tufail Road Saddar Lahore Cantt." },
     { icon: ClockIcon, label: t("contact.cardHours"), val: t("contact.hoursValue") },
   ];

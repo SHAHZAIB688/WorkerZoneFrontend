@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { buildBackendAssetUrl } from "../../../api/client";
+import { translateWorkerTrade } from "../../../utils/workerTradeLabels";
 
 const DoctorListCard = ({ doctor }) => {
   const { t } = useTranslation();
@@ -13,9 +14,9 @@ const DoctorListCard = ({ doctor }) => {
           src={
             doctor.image
               ? buildBackendAssetUrl(doctor.image)
-              : `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(doctor.user?.name || "Doctor")}`
+              : `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(doctor.user?.name || t("common.unnamedWorker"))}`
           }
-          alt={doctor.user?.name || "Doctor"}
+          alt={doctor.user?.name || t("common.unnamedWorker")}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute start-4 top-4 flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-1.5 text-xs font-bold text-emerald-600 shadow-sm backdrop-blur">
@@ -27,7 +28,13 @@ const DoctorListCard = ({ doctor }) => {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h3 className="text-xl font-bold text-slate-900 transition-colors group-hover:text-brand-600">{doctor.user?.name}</h3>
-            <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-brand-500">{doctor.specialization}</p>
+            <p className="mt-1 text-sm font-semibold uppercase tracking-wider text-brand-500">{translateWorkerTrade(t, doctor.specialization)}</p>
+            {doctor.distanceKm != null && (
+              <p className="mt-1 text-xs font-medium text-slate-500">{t("dash.patient.doctors.distanceAway", { km: doctor.distanceKm })}</p>
+            )}
+            {(doctor.locationCity || doctor.locationAddress) && (
+              <p className="mt-0.5 text-xs text-slate-400">{[doctor.locationCity, doctor.locationAddress].filter(Boolean).join(" · ")}</p>
+            )}
           </div>
           <div className="flex shrink-0 items-center gap-1.5 rounded-xl border border-amber-100 bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-600">
             ★ 4.8

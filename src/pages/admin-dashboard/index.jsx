@@ -619,6 +619,7 @@ const AdminDashboard = () => {
               title={t("dash.admin.settingsTitle")}
               description={t("dash.admin.settingsDesc")}
               idPrefix="admin-acct"
+              resolveAddressFromCoords={false}
             />
           )}
 

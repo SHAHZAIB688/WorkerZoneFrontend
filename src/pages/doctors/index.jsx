@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import patient from "../../api/client";
 import Loader from "../../components/Loader";
 import DoctorsFilterBar from "./components/DoctorsFilterBar";
 import DoctorListCard from "./components/DoctorListCard";
+import { useBrowserLocation } from "../../state/BrowserLocationContext";
 
 const DoctorsPage = () => {
   const { t, i18n } = useTranslation();
+  const geo = useBrowserLocation();
   const [doctors, setDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +17,7 @@ const DoctorsPage = () => {
   const [experience, setExperience] = useState("All");
   const [availability, setAvailability] = useState("All");
   const [searchLoading, setSearchLoading] = useState(false);
+  const [nearBy, setNearBy] = useState({ active: false, lat: null, lng: null });
 
   const EXPERIENCE_OPTIONS = useMemo(
     () => [
@@ -43,23 +46,46 @@ const DoctorsPage = () => {
     [t, i18n.language]
   );
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const { data } = await patient.get("/doctors");
-        setDoctors(data || []);
-        setFilteredDoctors(data || []);
-      } catch {
-        toast.error(t("doctors.loadError"));
-      } finally {
-        setLoading(false);
+  const fetchDoctors = useCallback(async () => {
+    try {
+      const params = {};
+      if (nearBy.active && nearBy.lat != null && nearBy.lng != null) {
+        params.lat = nearBy.lat;
+        params.lng = nearBy.lng;
+        params.radiusKm = 100;
       }
-    };
+      const { data } = await patient.get("/doctors", { params });
+      setDoctors(data || []);
+    } catch {
+      toast.error(t("doctors.loadError"));
+    } finally {
+      setLoading(false);
+    }
+  }, [t, nearBy.active, nearBy.lat, nearBy.lng]);
 
-    fetchDoctors();
-    const intervalId = setInterval(fetchDoctors, 30000);
+  useEffect(() => {
+    void fetchDoctors();
+    const intervalId = setInterval(() => void fetchDoctors(), 30000);
     return () => clearInterval(intervalId);
-  }, [t]);
+  }, [fetchDoctors]);
+
+  const enableNearOnPage = async () => {
+    let lat = geo.lat;
+    let lng = geo.lng;
+    if (geo.status !== "ready" || lat == null || lng == null) {
+      const loc = await geo.requestLocation();
+      if (!loc) {
+        toast.error(!navigator.geolocation ? t("auth.geoNotSupported") : t("auth.geoDenied"));
+        return;
+      }
+      lat = loc.lat;
+      lng = loc.lng;
+    }
+    setNearBy({ active: true, lat, lng });
+    toast.success(t("doctors.nearMeOn"));
+  };
+
+  const clearNearOnPage = () => setNearBy({ active: false, lat: null, lng: null });
 
   useEffect(() => {
     let result = doctors;
@@ -94,6 +120,7 @@ const DoctorsPage = () => {
     setSearch("");
     setExperience("All");
     setAvailability("All");
+    clearNearOnPage();
   };
 
   return (
@@ -115,6 +142,10 @@ const DoctorsPage = () => {
         searchLoading={searchLoading}
         experienceOptions={EXPERIENCE_OPTIONS}
         availabilityOptions={AVAILABILITY_OPTIONS}
+        nearByActive={nearBy.active}
+        onNearMe={enableNearOnPage}
+        onClearNear={clearNearOnPage}
+        nearBusy={geo.status === "loading"}
       />
 
       {loading ? (
