@@ -24,6 +24,11 @@ const TestimonialsSection = ({ testimonials }) => {
                     <img
                       src={item.image}
                       alt={item.name}
+                      width={128}
+                      height={128}
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer-when-downgrade"
                       className="h-16 w-16 rounded-2xl object-cover ring-4 ring-brand-50 transition-transform group-hover:scale-105"
                     />
                     <div>

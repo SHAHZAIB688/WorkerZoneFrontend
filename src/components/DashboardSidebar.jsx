@@ -6,19 +6,19 @@ const DashboardSidebar = ({ navItems, activeTab, onTabChange, onLogout, isOpen }
   const { t } = useTranslation();
   return (
   <aside 
-    className={`fixed inset-y-0 left-0 z-50 flex w-[280px] transform flex-col bg-gradient-to-b from-[#257ea3] to-[#29add1] px-4 py-7 text-white shadow-2xl transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:z-0 lg:flex lg:h-screen lg:w-[300px] lg:translate-x-0 ${
+    className={`fixed inset-y-0 left-0 z-50 flex max-h-screen min-h-0 w-[280px] transform flex-col bg-gradient-to-b from-[#257ea3] to-[#29add1] px-4 py-7 text-white shadow-2xl transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:z-0 lg:flex lg:h-screen lg:max-h-screen lg:w-[300px] lg:translate-x-0 ${
       isOpen ? "translate-x-0" : "-translate-x-full"
     }`}
   >
-    <div className="flex h-full flex-col">
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex items-center justify-center gap-1 w-full">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="mb-8 flex shrink-0 items-center justify-between">
+        <div className="flex w-full items-center justify-center gap-1">
           <img src={sidebarLogo} alt={t("dash.sidebar.logoAlt")} className="h-10 w-10 object-contain" />
           <span className="-ml-1 text-[26px] font-bold leading-none tracking-tight">{t("brand.name")}</span>
         </div>
       </div>
 
-      <div className="space-y-2">
+      <nav className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-y-contain pr-1 custom-scrollbar">
         {navItems.map((item) => (
           <button
             key={item.id}
@@ -39,10 +39,9 @@ const DashboardSidebar = ({ navItems, activeTab, onTabChange, onLogout, isOpen }
             )}
           </button>
         ))}
-      </div>
+      </nav>
 
-      <div className="mt-auto pt-4">
-        <div className="mb-4 border-t border-cyan-200/50" />
+      <div className="shrink-0 border-t border-cyan-200/50 pt-4">
         <button
           type="button"
           onClick={onLogout}

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import patient from "../api/client";
 import Loader from "./Loader";
+import PasswordInput from "./PasswordInput";
 import { resolveDeviceLocationForForm } from "../utils/reverseGeocode";
 import { useBrowserLocation } from "../state/BrowserLocationContext";
 
@@ -280,9 +281,8 @@ const AccountProfileForm = ({
           <label htmlFor={pid("current-password")} className="mb-1 block text-sm font-medium text-slate-700">
             {t("dash.accountForm.currentPassword")}
           </label>
-          <input
+          <PasswordInput
             id={pid("current-password")}
-            type="password"
             autoComplete="current-password"
             value={form.currentPassword}
             onChange={(e) => setForm((p) => ({ ...p, currentPassword: e.target.value }))}
@@ -293,9 +293,8 @@ const AccountProfileForm = ({
           <label htmlFor={pid("new-password")} className="mb-1 block text-sm font-medium text-slate-700">
             {t("dash.accountForm.newPassword")}
           </label>
-          <input
+          <PasswordInput
             id={pid("new-password")}
-            type="password"
             autoComplete="new-password"
             value={form.newPassword}
             onChange={(e) => setForm((p) => ({ ...p, newPassword: e.target.value }))}
@@ -306,9 +305,8 @@ const AccountProfileForm = ({
           <label htmlFor={pid("confirm-password")} className="mb-1 block text-sm font-medium text-slate-700">
             {t("dash.accountForm.confirmPassword")}
           </label>
-          <input
+          <PasswordInput
             id={pid("confirm-password")}
-            type="password"
             autoComplete="new-password"
             value={form.confirmPassword}
             onChange={(e) => setForm((p) => ({ ...p, confirmPassword: e.target.value }))}

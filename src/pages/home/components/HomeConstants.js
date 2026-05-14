@@ -1,8 +1,9 @@
+/** Hero carousel — verified CDN URLs (prior Unsplash IDs returned 404). */
 export const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1504917595217-d43dc535aa14?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=900&q=80",
   "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80",
+  "https://images.pexels.com/photos/8961064/pexels-photo-8961064.jpeg?auto=compress&cs=tinysrgb&w=900",
+  "https://images.pexels.com/photos/5691602/pexels-photo-5691602.jpeg?auto=compress&cs=tinysrgb&w=900",
 ];
 
 export const TOP_SPECIALITIES = [
@@ -70,45 +71,29 @@ export const FAQ_ITEMS = [
   },
 ];
 
-export const TESTIMONIALS = [
-  {
-    name: "Ali Raza",
-    role: "Homeowner",
+/**
+ * Portrait avatars keyed by `home.testimonials[].id` (same id in EN/UR).
+ * Male names → portraits/men; female names → portraits/women (randomuser.me).
+ */
+export const TESTIMONIAL_MEDIA_BY_ID = {
+  home_testimonial_ali: {
     image: "https://randomuser.me/api/portraits/men/32.jpg",
-    content:
-      "Worker Zone made booking a reliable electrician effortless. They showed up on time and the work was professional.",
     rating: 5,
   },
-  {
-    name: "Fatima Ahmed",
-    role: "Client",
+  home_testimonial_fatima: {
     image: "https://randomuser.me/api/portraits/women/44.jpg",
-    content:
-      "I loved the WhatsApp reminders for every booking. It is very helpful when you are juggling repairs at home.",
     rating: 5,
   },
-  {
-    name: "Usman Khan",
-    role: "Client",
+  home_testimonial_usman: {
     image: "https://randomuser.me/api/portraits/men/76.jpg",
-    content:
-      "The interface is simple. I can quickly find plumbers and carpenters without calling around for days.",
     rating: 4,
   },
-  {
-    name: "Ayesha Malik",
-    role: "Client",
+  home_testimonial_ayesha: {
     image: "https://randomuser.me/api/portraits/women/68.jpg",
-    content:
-      "Seeing verification and reviews gave me confidence that my home project was in safe hands.",
     rating: 5,
   },
-  {
-    name: "Hassan Ali",
-    role: "Client",
+  home_testimonial_hassan: {
     image: "https://randomuser.me/api/portraits/men/51.jpg",
-    content:
-      "Online booking is fast and there is a wide choice of skilled workers for different trades.",
     rating: 4,
   },
-];
+};

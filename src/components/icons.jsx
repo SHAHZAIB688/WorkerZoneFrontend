@@ -62,3 +62,22 @@ export const StoreIcon = () => (
   </Svg>
 );
 export const ChevronDownIcon = ({ className = "" }) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>;
+
+/** Show password (visibility toggle). */
+export const EyeIcon = () => (
+  <Svg>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+    <circle cx="12" cy="12" r="3" />
+  </Svg>
+);
+
+/** Hide password (visibility toggle). */
+export const EyeSlashIcon = () => (
+  <Svg>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 9.963 7.178.07.207.07.431 0 .639M12 12h.008v.008H12V12zm.956 4.644l-1.535-1.535m0 0L9.88 9.88m0 0L8.223 8.223M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+  </Svg>
+);

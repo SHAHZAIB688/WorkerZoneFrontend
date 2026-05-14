@@ -6,7 +6,6 @@ const PatientDashboardOverviewSection = ({
   dashboardStats,
   nextAppointment,
   openPaymentModal,
-  healthSummary,
 }) => {
   const { t } = useTranslation();
 
@@ -28,8 +27,8 @@ const PatientDashboardOverviewSection = ({
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:col-span-2">
+      <div className="grid gap-4">
+        <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h3 className="text-xl font-semibold text-slate-900">{t("dash.patient.overview.nextBooking")}</h3>
           {nextAppointment ? (
             <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4">
@@ -64,29 +63,6 @@ const PatientDashboardOverviewSection = ({
           ) : (
             <p className="mt-4 rounded-xl border border-dashed border-slate-200 p-4 text-sm text-slate-500">{t("dash.patient.overview.noUpcoming")}</p>
           )}
-        </article>
-
-        <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="text-xl font-semibold text-slate-900">{t("dash.patient.overview.healthCardTitle")}</h3>
-          <p className="mt-1 text-xs text-slate-500">{t("dash.patient.overview.healthCardHint")}</p>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">{t("dash.patient.overview.bloodGroup")}</p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">{healthSummary.bloodGroup || t("dash.patient.overview.notSet")}</p>
-            </div>
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">{t("dash.patient.overview.allergies")}</p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">{healthSummary.allergies || t("dash.patient.overview.notSet")}</p>
-            </div>
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">{t("dash.patient.overview.chronic")}</p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">{healthSummary.chronicDiseases || t("dash.patient.overview.notSet")}</p>
-            </div>
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">{t("dash.patient.overview.lastCheckup")}</p>
-              <p className="mt-1 text-sm font-semibold text-slate-800">{healthSummary.lastCheckup || t("dash.patient.overview.notSet")}</p>
-            </div>
-          </div>
         </article>
       </div>
     </section>

@@ -110,7 +110,7 @@
     "startingRate": "Starting Rate",
     "viewDetails": "View Details",
     "testimonialsTitle": "What our clients say",
-    "testimonialsSubtitle": "Real stories from people who hired skilled workers through Worker Zone.",
+    "testimonialsSubtitle": "Real stories from homeowners and clients across Pakistan who booked electricians, plumbers, masons, and other skilled workers through Worker Zone.",
     "faqTitle": "FAQ",
     "faqSubtitle": "Answers to common client questions.",
     "ctaTitle": "Ready to Book Your Next Service?",
@@ -156,26 +156,31 @@
     ],
     "testimonials": [
       {
+        "id": "home_testimonial_ali",
         "name": "Ali Raza",
         "role": "Homeowner",
         "content": "Worker Zone made booking a reliable electrician effortless. They showed up on time and the work was professional."
       },
       {
+        "id": "home_testimonial_fatima",
         "name": "Fatima Ahmed",
         "role": "Client",
         "content": "I loved the WhatsApp notifications. I get reminders for every booking, which is very helpful."
       },
       {
+        "id": "home_testimonial_usman",
         "name": "Usman Khan",
         "role": "Client",
         "content": "The interface is simple and user-friendly. I can easily book plumbers and carpenters for home jobs."
       },
       {
+        "id": "home_testimonial_ayesha",
         "name": "Ayesha Malik",
         "role": "Client",
         "content": "Seeing verification and reviews gave me confidence that my project was in safe hands."
       },
       {
+        "id": "home_testimonial_hassan",
         "name": "Hassan Ali",
         "role": "Client",
         "content": "The online booking system is very fast and there is a wide selection of skilled workers."
@@ -227,6 +232,8 @@
     "signUp": "Sign Up",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "choosePassword": "Choose Password",
     "signInBtn": "Sign In",
     "registerBtn": "Register",

@@ -11,6 +11,7 @@ import VerificationModal from "../../components/VerificationModal";
 import Dropdown from "../../components/Dropdown";
 import AuthBrandPanel from "../auth/components/AuthBrandPanel";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import PasswordInput from "../../components/PasswordInput";
 import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
 import { translateWorkerTrade } from "../../utils/workerTradeLabels";
 import { resolveDeviceLocationForForm } from "../../utils/reverseGeocode";
@@ -240,12 +241,13 @@ const SignupPage = () => {
               className="w-full border-b border-slate-200 py-2 text-sm outline-none transition-colors focus:border-brand-600 sm:py-3"
             />
 
-            <input
+            <PasswordInput
               name="password"
-              type="password"
-              placeholder={t("auth.choosePassword")}
+              value={form.password}
               onChange={onChange}
               required
+              placeholder={t("auth.choosePassword")}
+              autoComplete="new-password"
               className="w-full border-b border-slate-200 py-2 text-sm outline-none transition-colors focus:border-brand-600 sm:py-3"
             />
 

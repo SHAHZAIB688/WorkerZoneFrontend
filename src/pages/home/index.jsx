@@ -12,7 +12,7 @@ import FeaturedDoctorsSection from "./components/FeaturedDoctorsSection";
 import TestimonialsSection from "./components/TestimonialsSection";
 import FaqSection from "./components/FaqSection";
 import CtaSection from "./components/CtaSection";
-import { HERO_IMAGES, TOP_SPECIALITIES, TESTIMONIALS } from "./components/HomeConstants";
+import { HERO_IMAGES, TOP_SPECIALITIES, TESTIMONIAL_MEDIA_BY_ID } from "./components/HomeConstants";
 import { translateWorkerTrade } from "../../utils/workerTradeLabels";
 
 const HomePage = () => {
@@ -42,11 +42,14 @@ const HomePage = () => {
   const testimonials = useMemo(
     () =>
       Array.isArray(testimonialTexts)
-        ? testimonialTexts.map((item, i) => ({
-            ...item,
-            image: TESTIMONIALS[i]?.image,
-            rating: TESTIMONIALS[i]?.rating ?? 5,
-          }))
+        ? testimonialTexts.map((item) => {
+            const meta = item.id ? TESTIMONIAL_MEDIA_BY_ID[item.id] : null;
+            return {
+              ...item,
+              image: meta?.image ?? "",
+              rating: meta?.rating ?? 5,
+            };
+          })
         : [],
     [testimonialTexts]
   );

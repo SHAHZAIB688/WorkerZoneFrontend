@@ -32,6 +32,12 @@ const HeroSection = ({ heroImages, currentImage }) => {
                 key={img}
                 src={img}
                 alt={`${t("home.heroImgAlt")} ${index + 1}`}
+                width={900}
+                height={600}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+                fetchPriority={index === 0 ? "high" : "low"}
+                referrerPolicy="no-referrer-when-downgrade"
                 className={`absolute left-0 top-0 h-full w-full rounded-2xl object-cover shadow-2xl ring-4 ring-white/20 transition-opacity duration-1000 ${
                   index === currentImage ? "opacity-100" : "opacity-0"
                 }`}

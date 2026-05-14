@@ -638,7 +638,7 @@ const DoctorDashboard = () => {
                                 {apptStatus(a) === "pending" && (
                                   <>
                                     <button className="rounded bg-emerald-600 px-2 py-1 text-xs font-semibold text-white" type="button" onClick={() => updateStatus(a._id, "accepted")}>
-                                      {t("dash.doctor.accept")}
+                                      {t("Accept")}
                                     </button>
                                     <button className="rounded bg-amber-500 px-2 py-1 text-xs font-semibold text-white" type="button" onClick={() => updateStatus(a._id, "rejected")}>
                                       {t("dash.doctor.reject")}

@@ -13,7 +13,6 @@ import PatientReviewModal from "./components/PatientReviewModal";
 import DoctorDetailsModal from "../../components/DoctorDetailsModal";
 import StoreItemDetailsModal from "../../components/StoreItemDetailsModal";
 import PatientDashboardOverviewSection from "./components/PatientDashboardOverviewSection";
-import PatientHealthSummarySection from "./components/PatientHealthSummarySection";
 import PatientDoctorsSection from "./components/PatientDoctorsSection";
 import PatientHistorySection from "./components/PatientHistorySection";
 import PatientPaymentHistorySection from "./components/PatientPaymentHistorySection";
@@ -30,12 +29,6 @@ const normalizeTimeSlot = (timeSlot) => {
   return `${String(Number(hours)).padStart(2, "0")}:${String(Number(minutes)).padStart(2, "0")}`;
 };
 
-const DEFAULT_HEALTH_SUMMARY = {
-  bloodGroup: "",
-  allergies: "",
-  chronicDiseases: "",
-  lastCheckup: "",
-};
 
 const PatientDashboard = () => {
   const { t } = useTranslation();
@@ -70,8 +63,6 @@ const PatientDashboard = () => {
   const [videoCall, setVideoCall] = useState({ open: false, roomId: null });
   const [selectedDoctorId, setSelectedDoctorId] = useState(null);
   const [selectedStoreItemId, setSelectedStoreItemId] = useState(null);
-  const [healthSummary, setHealthSummary] = useState(DEFAULT_HEALTH_SUMMARY);
-  const [savingHealthSummary, setSavingHealthSummary] = useState(false);
   const prevAppointmentsRef = useRef([]);
   const location = useLocation();
   const navigate = useNavigate();
@@ -93,20 +84,6 @@ const PatientDashboard = () => {
     setDoctors(data);
   }, []);
 
-  const fetchHealthSummary = async () => {
-    try {
-      const { data } = await patient.get("/auth/me");
-      const summary = data?.healthSummary || {};
-      setHealthSummary({
-        bloodGroup: summary.bloodGroup || "",
-        allergies: summary.allergies || "",
-        chronicDiseases: summary.chronicDiseases || "",
-        lastCheckup: summary.lastCheckup || "",
-      });
-    } catch (error) {
-      toast.error(i18n.t("dash.patient.toast.loadSummaryFail"));
-    }
-  };
 
   const fetchAppointments = async () => {
     try {
@@ -142,7 +119,6 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     fetchAppointments();
-    fetchHealthSummary();
 
     const appointmentIntervalId = setInterval(fetchAppointments, 10000);
     const doctorIntervalId = setInterval(fetchDoctors, 30000);
@@ -356,24 +332,6 @@ const PatientDashboard = () => {
     }
   };
 
-  const saveHealthSummary = async (e) => {
-    e.preventDefault();
-    setSavingHealthSummary(true);
-    try {
-      const payload = {
-        bloodGroup: healthSummary.bloodGroup,
-        allergies: healthSummary.allergies,
-        chronicDiseases: healthSummary.chronicDiseases,
-        lastCheckup: healthSummary.lastCheckup,
-      };
-      await patient.put("/auth/health-summary", payload);
-      toast.success(t("dash.patient.toast.summaryUpdated"));
-    } catch (error) {
-      toast.error(error.response?.data?.message || t("dash.patient.toast.summaryFail"));
-    } finally {
-      setSavingHealthSummary(false);
-    }
-  };
 
   const notifications = useMemo(() => {
     const list = [];
@@ -488,7 +446,6 @@ const PatientDashboard = () => {
           { id: "doctors", label: t("dash.patient.nav.doctors"), icon: DoctorIcon },
           { id: "store", label: t("dash.store.nav"), icon: StoreIcon },
           { id: "store-orders", label: "Store Orders", icon: FileIcon },
-          { id: "health-summary", label: t("dash.patient.nav.healthSummary"), icon: AppointmentIcon },
           {
             id: "payments",
             label: t("dash.patient.nav.payments"),
@@ -511,7 +468,6 @@ const PatientDashboard = () => {
                 dashboardStats={dashboardStats}
                 nextAppointment={nextAppointment}
                 openPaymentModal={openPaymentModal}
-                healthSummary={healthSummary}
               />
             )}
 
@@ -519,14 +475,6 @@ const PatientDashboard = () => {
 
             {activeTab === "store-orders" && <PatientStoreOrdersSection />}
 
-            {activeTab === "health-summary" && (
-              <PatientHealthSummarySection
-                healthSummary={healthSummary}
-                setHealthSummary={setHealthSummary}
-                saveHealthSummary={saveHealthSummary}
-                savingHealthSummary={savingHealthSummary}
-              />
-            )}
 
             {activeTab === "doctors" && (
               <PatientDoctorsSection
