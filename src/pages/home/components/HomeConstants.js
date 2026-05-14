@@ -11,6 +11,8 @@ export const TOP_SPECIALITIES = [
   "Plumber",
   "Carpenter",
   "Painter",
+  "AC Installation",
+  "TV Installation",
   "HVAC Technician",
 ];
 
@@ -21,6 +23,8 @@ export const DOCTOR_SIGNUP_SPECIALIZATIONS = [
   "Plumber",
   "Carpenter",
   "Painter",
+  "AC Installation",
+  "TV Installation",
   "Mason & Tiler",
   "HVAC Technician",
   "Welder",

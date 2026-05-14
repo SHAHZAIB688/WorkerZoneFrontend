@@ -5,18 +5,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import patient from "../../api/client";
 import i18n from "../../i18n/config";
 import DashboardShell from "../../components/DashboardShell";
-import { DashboardIcon, DoctorIcon, AppointmentIcon, FileIcon, PaymentIcon, SettingsIcon } from "../../components/icons";
+import { DashboardIcon, DoctorIcon, AppointmentIcon, FileIcon, PaymentIcon, SettingsIcon, StoreIcon } from "../../components/icons";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../state/AuthContext";
 import PatientBookingModal from "./components/PatientBookingModal";
 import PatientReviewModal from "./components/PatientReviewModal";
+import DoctorDetailsModal from "../../components/DoctorDetailsModal";
+import StoreItemDetailsModal from "../../components/StoreItemDetailsModal";
 import PatientDashboardOverviewSection from "./components/PatientDashboardOverviewSection";
 import PatientHealthSummarySection from "./components/PatientHealthSummarySection";
 import PatientDoctorsSection from "./components/PatientDoctorsSection";
 import PatientHistorySection from "./components/PatientHistorySection";
 import PatientPaymentHistorySection from "./components/PatientPaymentHistorySection";
 import PatientSettingsSection from "./components/PatientSettingsSection";
+import PatientStoreSection from "./components/PatientStoreSection";
+import PatientStoreOrdersSection from "./components/PatientStoreOrdersSection";
 import VideoCall from "../../components/VideoCall";
+import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
 
 const normalizeTimeSlot = (timeSlot) => {
   if (!timeSlot) return "";
@@ -63,6 +68,8 @@ const PatientDashboard = () => {
   const [paymentModal, setPaymentModal] = useState({ isOpen: false, appointmentId: null, doctorName: "" });
   const [reviewModal, setReviewModal] = useState({ isOpen: false, appointmentId: null, doctorName: "", rating: 5, comment: "" });
   const [videoCall, setVideoCall] = useState({ open: false, roomId: null });
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null);
+  const [selectedStoreItemId, setSelectedStoreItemId] = useState(null);
   const [healthSummary, setHealthSummary] = useState(DEFAULT_HEALTH_SUMMARY);
   const [savingHealthSummary, setSavingHealthSummary] = useState(false);
   const prevAppointmentsRef = useRef([]);
@@ -187,6 +194,39 @@ const PatientDashboard = () => {
     };
 
     verifyPaymentOnReturn();
+  }, [location.search, navigate]);
+
+  useEffect(() => {
+    const verifyStorePaymentReturn = async () => {
+      const params = new URLSearchParams(location.search);
+      const storePayment = params.get("store_payment");
+      const sessionId = params.get("session_id");
+      const orderId = params.get("order_id");
+
+      if (!storePayment) return;
+
+      if (storePayment === "cancelled") {
+        toast(i18n.t("dash.store.storePaymentCancelled"));
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      if (storePayment !== "success" || !sessionId || !orderId) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      try {
+        await patient.post("/store/orders/verify-checkout", { sessionId, orderId });
+        toast.success(i18n.t("dash.store.storePaymentPaid"));
+      } catch (error) {
+        toast.error(error.response?.data?.message || i18n.t("dash.store.storePaymentVerifyFail"));
+      } finally {
+        navigate("/dashboard", { replace: true });
+      }
+    };
+
+    void verifyStorePaymentReturn();
   }, [location.search, navigate]);
 
   useEffect(() => {
@@ -410,8 +450,11 @@ const PatientDashboard = () => {
   }, [appointments]);
 
   const doctorCategories = useMemo(() => {
-    const categories = new Set(doctors.map((d) => d.specialization).filter(Boolean));
-    return ["all", ...Array.from(categories)];
+    const categories = new Set(DOCTOR_SIGNUP_SPECIALIZATIONS);
+    doctors.forEach((d) => {
+      if (d.specialization) categories.add(d.specialization);
+    });
+    return ["all", ...Array.from(categories).sort((a, b) => a.localeCompare(b))];
   }, [doctors]);
 
   const filteredDoctors = useMemo(() => {
@@ -443,6 +486,8 @@ const PatientDashboard = () => {
         navItems={[
           { id: "dashboard", label: t("dash.patient.nav.dashboard"), icon: DashboardIcon },
           { id: "doctors", label: t("dash.patient.nav.doctors"), icon: DoctorIcon },
+          { id: "store", label: t("dash.store.nav"), icon: StoreIcon },
+          { id: "store-orders", label: "Store Orders", icon: FileIcon },
           { id: "health-summary", label: t("dash.patient.nav.healthSummary"), icon: AppointmentIcon },
           {
             id: "payments",
@@ -470,6 +515,10 @@ const PatientDashboard = () => {
               />
             )}
 
+            {activeTab === "store" && <PatientStoreSection onSelectItem={setSelectedStoreItemId} />}
+
+            {activeTab === "store-orders" && <PatientStoreOrdersSection />}
+
             {activeTab === "health-summary" && (
               <PatientHealthSummarySection
                 healthSummary={healthSummary}
@@ -488,6 +537,7 @@ const PatientDashboard = () => {
                 formatServiceFee={formatServiceFee}
                 setForm={setForm}
                 setBookingModalOpen={setBookingModalOpen}
+                onSelectDoctor={setSelectedDoctorId}
               />
             )}
 
@@ -580,6 +630,19 @@ const PatientDashboard = () => {
       )}
 
       <PatientReviewModal reviewModal={reviewModal} setReviewModal={setReviewModal} onSubmit={submitReview} />
+
+      <DoctorDetailsModal
+        doctorId={selectedDoctorId}
+        isOpen={!!selectedDoctorId}
+        onClose={() => setSelectedDoctorId(null)}
+      />
+
+      <StoreItemDetailsModal
+        itemId={selectedStoreItemId}
+        isOpen={!!selectedStoreItemId}
+        onClose={() => setSelectedStoreItemId(null)}
+        onOrderPlaced={() => fetchAppointments()}
+      />
 
       <VideoCall
         open={videoCall.open}

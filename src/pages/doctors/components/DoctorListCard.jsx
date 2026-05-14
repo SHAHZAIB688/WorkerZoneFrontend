@@ -10,6 +10,11 @@ const DoctorListCard = ({ doctor }) => {
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
       <div className="relative h-60 overflow-hidden rounded-[1.5rem] border border-slate-100 bg-slate-50">
+        {doctor.isFeatured && (
+          <div className="absolute start-3 top-3 z-10 rounded-full bg-amber-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+            {t("doctors.card.featured")}
+          </div>
+        )}
         <img
           src={
             doctor.image
@@ -19,7 +24,7 @@ const DoctorListCard = ({ doctor }) => {
           alt={doctor.user?.name || t("common.unnamedWorker")}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute start-4 top-4 flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-1.5 text-xs font-bold text-emerald-600 shadow-sm backdrop-blur">
+        <div className="absolute start-4 bottom-4 flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-1.5 text-xs font-bold text-emerald-600 shadow-sm backdrop-blur">
           <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
           {t("doctors.card.verified")}
         </div>
@@ -36,8 +41,8 @@ const DoctorListCard = ({ doctor }) => {
               <p className="mt-0.5 text-xs text-slate-400">{[doctor.locationCity, doctor.locationAddress].filter(Boolean).join(" · ")}</p>
             )}
           </div>
-          <div className="flex shrink-0 items-center gap-1.5 rounded-xl border border-amber-100 bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-600">
-            ★ 4.8
+          <div className="flex shrink-0 items-center gap-1.5 rounded-xl border border-amber-100 bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-700">
+            ★ {Number(doctor.averageRating || 0).toFixed(1)}
           </div>
         </div>
 

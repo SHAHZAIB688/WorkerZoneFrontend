@@ -14,6 +14,7 @@ const PatientDoctorsSection = ({
   formatServiceFee,
   setForm,
   setBookingModalOpen,
+  onSelectDoctor,
 }) => {
   const { t } = useTranslation();
   const geo = useBrowserLocation();
@@ -135,6 +136,15 @@ const PatientDoctorsSection = ({
             >
               {t("dash.patient.doctors.bookNow")}
             </button>
+            {onSelectDoctor && (
+              <button
+                type="button"
+                onClick={() => onSelectDoctor(doctor._id)}
+                className="mt-2 inline-block w-full rounded-xl border border-brand-600 px-4 py-2 text-center text-sm font-semibold text-brand-600 hover:bg-brand-50"
+              >
+                View Details
+              </button>
+            )}
           </article>
         ))}
         {filteredDoctors.length === 0 && (

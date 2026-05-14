@@ -129,16 +129,16 @@ const PatientPaymentHistorySection = ({ appointments, openPaymentModal }) => {
         ) : paid.length === 0 ? (
           <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 py-8 text-center text-sm text-slate-500">{t("dash.patient.payment.emptyPaid")}</p>
         ) : (
-          <table className="w-full min-w-[640px] border-collapse text-start text-sm">
+          <table className="dashboard-table w-full min-w-[640px] text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                <th className="py-3 pe-3">{t("dash.patient.payment.colPaid")}</th>
-                <th className="py-3 pe-3">{t("dash.patient.payment.colDoctor")}</th>
-                <th className="py-3 pe-3">{t("dash.patient.payment.colService")}</th>
-                <th className="py-3 pe-3">{t("dash.patient.payment.colAmount")}</th>
-                <th className="py-3 pe-3">{t("dash.patient.payment.colMethod")}</th>
-                <th className="py-3 pe-3">{t("dash.patient.payment.colStripeRef")}</th>
-                <th className="py-3">{t("dash.patient.payment.colBooking")}</th>
+                <th scope="col" className="py-3 pe-3">{t("dash.patient.payment.colPaid")}</th>
+                <th scope="col" className="py-3 pe-3">{t("dash.patient.payment.colDoctor")}</th>
+                <th scope="col" className="py-3 pe-3">{t("dash.patient.payment.colService")}</th>
+                <th scope="col" className="py-3 pe-3">{t("dash.patient.payment.colAmount")}</th>
+                <th scope="col" className="py-3 pe-3">{t("dash.patient.payment.colMethod")}</th>
+                <th scope="col" className="py-3 pe-3">{t("dash.patient.payment.colStripeRef")}</th>
+                <th scope="col" className="py-3">{t("dash.patient.payment.colBooking")}</th>
               </tr>
             </thead>
             <tbody>

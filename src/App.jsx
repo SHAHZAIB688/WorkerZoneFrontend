@@ -12,6 +12,7 @@ import AboutPage from "./pages/about";
 import TermsPage from "./pages/terms";
 import DoctorsPage from "./pages/doctors";
 import DoctorDetailsPage from "./pages/doctor-details";
+import PatientStoreItemDetailPage from "./pages/patient-dashboard/PatientStoreItemDetailPage";
 
 const App = () => (
   <>
@@ -25,6 +26,14 @@ const App = () => (
         <Route path="/terms" element={<TermsPage />} />
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/doctors/:doctorId" element={<DoctorDetailsPage />} />
+        <Route
+          path="/dashboard/store/:itemId"
+          element={(
+            <ProtectedRoute allowedRoles={["patient"]}>
+              <PatientStoreItemDetailPage />
+            </ProtectedRoute>
+          )}
+        />
         <Route
           path="/dashboard"
           element={(

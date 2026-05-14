@@ -1,39 +1,18 @@
-import React from 'react';
-import Dropdown from './Dropdown';
+import React from "react";
+import Dropdown from "./Dropdown";
+import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../pages/home/components/HomeConstants";
 
-const CategoryDropdown = ({ 
-  value, 
-  onChange, 
+const DEFAULT_TRADE_OPTIONS = ["All", ...DOCTOR_SIGNUP_SPECIALIZATIONS];
+
+const CategoryDropdown = ({
+  value,
+  onChange,
   options = [],
-  placeholder = "All Specialties",
+  placeholder = "All trades",
   className = "",
-  ...props 
+  ...props
 }) => {
-  const ALL_SPECIALIZATIONS = [
-    "All",
-    "Cardiologist",
-    "Dermatologist", 
-    "Neurologist",
-    "Orthopedic",
-    "Pediatrician",
-    "General Physician",
-    "Gynecologist",
-    "Ophthalmologist",
-    "ENT Specialist",
-    "Psychiatrist",
-    "Oncologist",
-    "Endocrinologist",
-    "Gastroenterologist",
-    "Pulmonologist",
-    "Rheumatologist",
-    "Nephrologist",
-    "Urologist",
-    "Anesthesiologist",
-    "Radiologist",
-    "Pathologist"
-  ];
-
-  const dropdownOptions = options.length > 0 ? options : ALL_SPECIALIZATIONS;
+  const dropdownOptions = options.length > 0 ? options : DEFAULT_TRADE_OPTIONS;
 
   return (
     <Dropdown

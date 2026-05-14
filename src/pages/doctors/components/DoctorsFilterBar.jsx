@@ -7,6 +7,9 @@ import { MapPinIcon, XMarkIcon } from "../../../icons";
 const DoctorsFilterBar = ({
   search,
   setSearch,
+  trade,
+  setTrade,
+  tradeOptions,
   experience,
   setExperience,
   availability,
@@ -64,6 +67,16 @@ const DoctorsFilterBar = ({
           placeholder={t("doctors.searchPlaceholder")}
           className="min-w-[200px] flex-1"
         />
+
+        {tradeOptions && setTrade && (
+          <CategoryDropdown
+            value={trade}
+            onChange={setTrade}
+            options={tradeOptions}
+            placeholder={t("doctors.tradePh")}
+            className="min-w-[10rem] flex-1 rounded-lg bg-white transition-colors hover:border-brand-300 sm:max-w-[14rem]"
+          />
+        )}
 
         <CategoryDropdown
           value={experience}

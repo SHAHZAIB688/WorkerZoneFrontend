@@ -100,7 +100,7 @@ const LocationHeaderControls = ({ className = "" }) => {
   const hasSaved = status === "ready" && placeLabel;
 
   return (
-    <div ref={rootRef} className={`relative min-w-0 ${className}`.trim()}>
+    <div ref={rootRef} className={`relative min-w-0 max-sm:w-auto max-sm:shrink-0 ${className}`.trim()}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -108,7 +108,7 @@ const LocationHeaderControls = ({ className = "" }) => {
         aria-haspopup="listbox"
         aria-label={t("locationPicker.dropdownAria")}
         title={hasSaved ? placeLabel : t("header.locationHint")}
-        className="flex h-10 w-full min-w-0 max-w-full items-center gap-2 rounded-xl border border-slate-300 bg-white px-2.5 py-1 text-start shadow-sm transition hover:border-slate-400 hover:bg-slate-50 md:min-w-[11rem] md:max-w-[18rem] lg:min-w-[12rem]"
+        className="flex h-10 items-center gap-2 rounded-xl border border-slate-300 bg-white px-2.5 py-1 text-start shadow-sm transition hover:border-slate-400 hover:bg-slate-50 max-sm:h-10 max-sm:w-10 max-sm:min-w-0 max-sm:max-w-none max-sm:shrink-0 max-sm:justify-center max-sm:gap-0 max-sm:px-0 max-sm:py-0 sm:w-full sm:min-w-0 sm:max-w-full sm:justify-start sm:gap-2 sm:px-2.5 sm:py-1 md:min-w-[11rem] md:max-w-[18rem] lg:min-w-[12rem]"
       >
         <span className="flex h-7 w-7 shrink-0 items-center justify-center text-brand-600">
           {pinBusy ? (
@@ -117,8 +117,10 @@ const LocationHeaderControls = ({ className = "" }) => {
             <MapPinIcon className="h-5 w-5" />
           )}
         </span>
-        <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-800">{triggerLabel}</span>
-        <ChevronDownIcon className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <span className="hidden min-w-0 flex-1 truncate text-sm font-semibold text-slate-800 sm:block">{triggerLabel}</span>
+        <ChevronDownIcon
+          className={`hidden h-4 w-4 shrink-0 text-slate-500 transition-transform duration-200 sm:block ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (

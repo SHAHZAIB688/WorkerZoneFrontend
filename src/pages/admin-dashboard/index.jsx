@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   PieChart,
@@ -21,11 +22,14 @@ import toast from "react-hot-toast";
 import patient, { buildBackendAssetUrl } from "../../api/client";
 import DashboardShell from "../../components/DashboardShell";
 import AccountProfileForm from "../../components/AccountProfileForm";
-import { AppointmentIcon, DashboardIcon, DoctorIcon, FileIcon, SettingsIcon, UsersIcon } from "../../components/icons";
+import { AppointmentIcon, DashboardIcon, DoctorIcon, FileIcon, SettingsIcon, UsersIcon, FeaturedAdIcon, StoreIcon } from "../../components/icons";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../state/AuthContext";
 import AdminStatsCards from "./components/AdminStatsCards";
+import AdminStoreSection from "./components/AdminStoreSection";
+import AdminStorePaymentsSection from "./components/AdminStorePaymentsSection";
 import { appointmentStatusLabel } from "../../utils/statusLabel";
+import { translateWorkerTrade } from "../../utils/workerTradeLabels";
 
 const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#9333ea"];
 
@@ -45,6 +49,7 @@ const AdminDashboard = () => {
   const [applications, setApplications] = useState([]);
   const [approvedDoctors, setApprovedDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
+  const [storeOrders, setStoreOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chartKey, setChartKey] = useState(0);
 
@@ -57,18 +62,21 @@ const AdminDashboard = () => {
         { data: applicationsData },
         { data: approvedDoctorsData },
         { data: appointmentsData },
+        storeOrdersRes,
       ] = await Promise.all([
         patient.get("/admin/stats"),
         patient.get("/admin/users"),
         patient.get("/admin/doctor-applications"),
         patient.get("/admin/approved-doctors"),
         patient.get("/admin/appointments"),
+        patient.get("/admin/store-orders").catch(() => ({ data: [] })),
       ]);
       setStats(statData);
       setUsers(usersData);
       setApplications(applicationsData);
       setApprovedDoctors(approvedDoctorsData);
       setAppointments(appointmentsData);
+      setStoreOrders(Array.isArray(storeOrdersRes?.data) ? storeOrdersRes.data : []);
       setChartKey((prev) => prev + 1);
     } catch (error) {
       toast.error(t("dash.admin.toast.loadFail"));
@@ -117,6 +125,11 @@ const AdminDashboard = () => {
     load();
   };
 
+  const featuredWorkers = useMemo(() => {
+    const now = Date.now();
+    return approvedDoctors.filter((d) => d.featuredUntil && new Date(d.featuredUntil).getTime() > now);
+  }, [approvedDoctors]);
+
   const statusBadge = (status) => {
     if (status === "approved") return "bg-emerald-100 text-emerald-700";
     if (status === "rejected") return "bg-rose-100 text-rose-700";
@@ -156,6 +169,16 @@ const AdminDashboard = () => {
       { label: t("dash.admin.stats.commission", { pct }), value: `PKR ${stats?.platformCommission ?? 0}`, icon: FileIcon },
       { label: t("dash.admin.stats.activeDoctors"), value: stats?.activeDoctors ?? 0, icon: DoctorIcon },
       { label: t("dash.admin.stats.inactiveDoctors"), value: stats?.inactiveDoctors ?? 0, icon: DoctorIcon },
+      {
+        label: t("dash.admin.stats.featuredAdRevenue"),
+        value: `PKR ${stats?.featuredListingRevenueTotal ?? 0}`,
+        icon: FeaturedAdIcon,
+      },
+      {
+        label: t("dash.admin.stats.featuredAdPurchases"),
+        value: String(stats?.featuredListingPurchasesCount ?? 0),
+        icon: FeaturedAdIcon,
+      },
     ];
   }, [stats, t]);
 
@@ -183,10 +206,34 @@ const AdminDashboard = () => {
     };
   }, [approvedDoctors, applications, t]);
 
+  const pendingStoreOrderCount = useMemo(
+    () => storeOrders.filter((o) => o.status === "pending").length,
+    [storeOrders]
+  );
+
+  const adminNotifications = useMemo(
+    () =>
+      storeOrders
+        .filter((o) => o.status === "pending")
+        .map((o) => ({
+          id: `store-order-${o._id}`,
+          title: t("dash.admin.notif.storeOrderTitle"),
+          message: t("dash.admin.notif.storeOrderBody", {
+            client: o.patient?.name || "—",
+            product: o.storeItem?.name || "—",
+            qty: o.quantity ?? 1,
+          }),
+          type: "info",
+          linkTab: "store",
+        })),
+    [storeOrders, t]
+  );
+
   return (
     <DashboardShell
       title={t("dash.admin.title")}
       subtitle={t("dash.admin.subtitle")}
+      notifications={adminNotifications}
       navItems={[
         { id: "dashboard", label: t("dash.admin.nav.dashboard"), icon: DashboardIcon },
         {
@@ -196,6 +243,9 @@ const AdminDashboard = () => {
           hasNotification: applications.some((a) => a.status === "pending"),
         },
         { id: "approved", label: t("dash.admin.nav.approved"), icon: DoctorIcon },
+        { id: "featured", label: t("dash.admin.nav.featured"), icon: FeaturedAdIcon },
+        { id: "store", label: t("dash.store.nav"), icon: StoreIcon, hasNotification: pendingStoreOrderCount > 0 },
+        { id: "payments", label: t("dash.admin.nav.storePayments"), icon: FileIcon },
         { id: "users", label: t("dash.admin.nav.users"), icon: UsersIcon },
         { id: "appointments", label: t("dash.admin.nav.appointments"), icon: AppointmentIcon },
         { id: "settings", label: t("dash.admin.nav.settings"), icon: SettingsIcon },
@@ -427,6 +477,16 @@ const AdminDashboard = () => {
                     <p className="rounded-lg bg-slate-100 p-2">
                       {t("dash.admin.monthlyRevenue")} <b>PKR {stats.financialStats?.monthlyEarnings || 0}</b>
                     </p>
+                    <p className="rounded-lg border border-amber-100 bg-amber-50/80 p-2">
+                      {t("dash.admin.featuredRevenueAllTime")}{" "}
+                      <b>PKR {stats?.featuredListingRevenueTotal ?? 0}</b> ({stats?.featuredListingPurchasesCount ?? 0}{" "}
+                      {t("dash.admin.featuredCheckouts")})
+                    </p>
+                    <p className="rounded-lg border border-amber-100 bg-amber-50/80 p-2">
+                      {t("dash.admin.featuredRevenueThisMonth")}{" "}
+                      <b>PKR {stats?.featuredListingRevenueThisMonth ?? 0}</b> ({stats?.featuredListingPurchasesThisMonth ?? 0}{" "}
+                      {t("dash.admin.featuredCheckouts")})
+                    </p>
                     <p className="rounded-lg bg-slate-100 p-2">
                       {t("dash.admin.cashOnline")}{" "}
                       <b>
@@ -467,15 +527,15 @@ const AdminDashboard = () => {
                 <p className="mt-4 text-sm text-slate-500">{t("dash.admin.noApplications")}</p>
               ) : (
                 <div className="mt-4 overflow-x-auto">
-                  <table className="min-w-full text-start text-sm">
+                  <table className="dashboard-table min-w-full text-sm">
                     <thead className="bg-slate-100 text-slate-700">
                       <tr>
-                        <th className="px-4 py-3">{t("dash.admin.tableName")}</th>
-                        <th className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
-                        <th className="px-4 py-3">{t("dash.admin.tableCategory")}</th>
-                        <th className="px-4 py-3">{t("dash.admin.tableCert")}</th>
-                        <th className="px-4 py-3">{t("dash.admin.tableStatus")}</th>
-                        <th className="px-4 py-3">{t("dash.admin.tableActions")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableName")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableCategory")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableCert")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableStatus")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableActions")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -517,14 +577,15 @@ const AdminDashboard = () => {
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900">{t("dash.admin.approvedTitle")}</h3>
               <div className="mt-4 overflow-x-auto">
-                <table className="min-w-full text-start text-sm">
+                <table className="dashboard-table min-w-full text-sm">
                   <thead className="bg-slate-100 text-slate-700">
                     <tr>
-                      <th className="px-4 py-3">{t("dash.admin.tableName")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableCategory")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableStatus")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableActions")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableName")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableCategory")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableFeaturedUntil")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableStatus")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableActions")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -532,7 +593,12 @@ const AdminDashboard = () => {
                       <tr key={item._id} className="border-b hover:bg-slate-50">
                         <td className="px-4 py-3">{item.user?.name}</td>
                         <td className="px-4 py-3">{item.user?.email}</td>
-                        <td className="px-4 py-3">{item.specialization}</td>
+                        <td className="px-4 py-3">{translateWorkerTrade(t, item.specialization)}</td>
+                        <td className="px-4 py-3 text-xs text-slate-600">
+                          {item.featuredUntil && new Date(item.featuredUntil).getTime() > Date.now()
+                            ? new Date(item.featuredUntil).toLocaleString()
+                            : "—"}
+                        </td>
                         <td className="px-4 py-3">
                           {item.user?.status === "suspended" ? (
                             <div className="space-y-1">
@@ -587,16 +653,55 @@ const AdminDashboard = () => {
             </div>
           )}
 
+          {!loading && activeTab === "featured" && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-900">{t("dash.admin.featuredTitle")}</h3>
+              <p className="mt-1 text-sm text-slate-600">{t("dash.admin.featuredSubtitle")}</p>
+              {featuredWorkers.length === 0 ? (
+                <p className="mt-4 text-sm text-slate-500">{t("dash.admin.featuredEmpty")}</p>
+              ) : (
+                <div className="mt-4 overflow-x-auto">
+                  <table className="dashboard-table min-w-full text-sm">
+                    <thead className="bg-slate-100 text-slate-700">
+                      <tr>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableName")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableCategory")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableFeaturedUntil")}</th>
+                        <th scope="col" className="px-4 py-3">{t("dash.admin.tableActions")}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {featuredWorkers.map((item) => (
+                        <tr key={item._id} className="border-b hover:bg-slate-50">
+                          <td className="px-4 py-3">{item.user?.name}</td>
+                          <td className="px-4 py-3">{item.user?.email}</td>
+                          <td className="px-4 py-3">{translateWorkerTrade(t, item.specialization)}</td>
+                          <td className="px-4 py-3">{item.featuredUntil ? new Date(item.featuredUntil).toLocaleString() : "—"}</td>
+                          <td className="px-4 py-3">
+                            <Link className="font-semibold text-brand-600 hover:underline" to={`/doctors/${item._id}`}>
+                              {t("dash.admin.viewListing")}
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
           {!loading && activeTab === "users" && (
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900">{t("dash.admin.usersTitle")}</h3>
               <div className="mt-4 overflow-x-auto">
-                <table className="min-w-full text-start text-sm">
+                <table className="dashboard-table min-w-full text-sm">
                   <thead className="bg-slate-100 text-slate-700">
                     <tr>
-                      <th className="px-4 py-3">{t("dash.admin.tableName")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableRole")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableName")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableEmail")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableRole")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -613,6 +718,10 @@ const AdminDashboard = () => {
             </div>
           )}
 
+          {!loading && activeTab === "store" && <AdminStoreSection />}
+
+          {!loading && activeTab === "payments" && <AdminStorePaymentsSection activeTab={activeTab} />}
+
           {!loading && activeTab === "settings" && (
             <AccountProfileForm
               refreshUser={refreshUser}
@@ -627,13 +736,13 @@ const AdminDashboard = () => {
             <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
               <h3 className="text-lg font-semibold text-slate-900">{t("dash.admin.appointmentsTitle")}</h3>
               <div className="mt-4 overflow-x-auto">
-                <table className="min-w-full text-start text-sm">
+                <table className="dashboard-table min-w-full text-sm">
                   <thead className="bg-slate-100 text-slate-700">
                     <tr>
-                      <th className="px-4 py-3">{t("dash.admin.tablePatient")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableDoctor")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableDateTime")}</th>
-                      <th className="px-4 py-3">{t("dash.admin.tableStatus")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tablePatient")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableDoctor")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableDateTime")}</th>
+                      <th scope="col" className="px-4 py-3">{t("dash.admin.tableStatus")}</th>
                     </tr>
                   </thead>
                   <tbody>

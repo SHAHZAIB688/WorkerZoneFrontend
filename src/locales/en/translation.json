@@ -100,7 +100,10 @@
     "howSubtitle": "Get your job booked in four simple steps.",
     "stepLabel": "Step {{n}}",
     "featuredTitle": "Featured workers",
-    "featuredSubtitle": "Meet our most trusted professionals.",
+    "featuredSubtitle": "Paid featured placements only. Boost your worker profile from the worker dashboard.",
+    "featuredHint": "Workers: Dashboard → Feature your ad → pay with Stripe to appear here.",
+    "featuredPill": "Featured",
+    "featuredEmpty": "No featured workers right now. Skilled pros can purchase a featured spot from their worker dashboard.",
     "experience": "Experience",
     "years": "{{n}} years",
     "rating": "Rating",
@@ -320,6 +323,10 @@
     "pageTitle": "Find the right worker",
     "pageSubtitle": "Search through our verified network of skilled tradespeople.",
     "searchPlaceholder": "Search by name, skill, or service...",
+    "tradePh": "Trade / category",
+    "trade": {
+      "all": "All trades"
+    },
     "experiencePh": "Experience",
     "availabilityPh": "Availability",
     "reset": "Reset",
@@ -356,7 +363,8 @@
       "yearsPlus": "{{n}}+ Years",
       "availability": "Availability",
       "weekdays": "Mon - Fri",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "featured": "Featured"
     }
   },
   "terms": {
@@ -384,7 +392,11 @@
     "aboutTitle": "About this professional",
     "noBio": "No bio provided yet.",
     "bookService": "Book service",
-    "backToList": "Back to workers"
+    "backToList": "Back to workers",
+    "contactTitle": "Contact",
+    "noPhone": "Phone not shared",
+    "locationTitle": "Service area",
+    "featuredBadge": "Featured listing"
   },
   "doctorReviews": {
     "title": "Reviews",
@@ -400,6 +412,8 @@
     "plumber": "Plumber",
     "carpenter": "Carpenter",
     "painter": "Painter",
+    "ac_installation": "AC Installation",
+    "tv_installation": "TV Installation",
     "mason_and_tiler": "Mason & Tiler",
     "hvac_technician": "HVAC Technician",
     "welder": "Welder",

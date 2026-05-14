@@ -46,6 +46,21 @@
   }
 }
 
+@layer components {
+  /* Dashboard data tables: browsers default <th> to center; align headers with cell text. */
+  .dashboard-table {
+    border-collapse: collapse;
+  }
+  .dashboard-table :is(th, td) {
+    text-align: start;
+    vertical-align: middle;
+  }
+  .dashboard-table thead th {
+    font-weight: 600;
+    color: rgb(30 41 59);
+  }
+}
+
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }

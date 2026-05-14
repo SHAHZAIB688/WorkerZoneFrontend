@@ -81,7 +81,13 @@ const DoctorDetailsPage = () => {
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-1">
-            <img
+            <div className="relative">
+              {doctor.isFeatured && (
+                <div className="absolute start-3 top-3 z-10 rounded-full bg-amber-500 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow">
+                  {t("doctorDetail.featuredBadge")}
+                </div>
+              )}
+              <img
               src={
                 doctor.image
                   ? buildBackendAssetUrl(doctor.image)
@@ -90,6 +96,7 @@ const DoctorDetailsPage = () => {
               alt={doctor.user?.name || unnamed}
               className="h-72 w-full rounded-2xl bg-slate-100 object-cover"
             />
+            </div>
           </div>
 
           <div className="space-y-4 lg:col-span-2">
@@ -97,6 +104,26 @@ const DoctorDetailsPage = () => {
               <h1 className="text-3xl font-bold text-slate-900">{doctor.user?.name}</h1>
               <p className="mt-1 text-base font-semibold text-brand-700">{translateWorkerTrade(t, doctor.specialization)}</p>
             </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+              <h3 className="text-sm font-bold text-slate-900">{t("doctorDetail.contactTitle")}</h3>
+              <p className="mt-2 text-sm text-slate-700">
+                {doctor.user?.phone ? (
+                  <a href={`tel:${String(doctor.user.phone).replace(/\s+/g, "")}`} className="font-semibold text-brand-600 hover:underline">
+                    {doctor.user.phone}
+                  </a>
+                ) : (
+                  <span className="text-slate-500">{t("doctorDetail.noPhone")}</span>
+                )}
+              </p>
+            </div>
+
+            {(doctor.locationCity || doctor.locationAddress) && (
+              <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+                <h3 className="text-sm font-bold text-slate-900">{t("doctorDetail.locationTitle")}</h3>
+                <p className="mt-2 text-sm text-slate-700">{[doctor.locationCity, doctor.locationAddress].filter(Boolean).join(" · ")}</p>
+              </div>
+            )}
 
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">

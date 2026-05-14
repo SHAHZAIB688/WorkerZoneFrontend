@@ -84,7 +84,10 @@ const HomePage = () => {
     return () => clearInterval(intervalId);
   }, [t]);
 
-  const featuredDoctors = useMemo(() => doctors.slice(0, 3), [doctors]);
+  const featuredDoctors = useMemo(() => {
+    const list = Array.isArray(doctors) ? doctors : [];
+    return list.filter((d) => d.isFeatured).slice(0, 12);
+  }, [doctors]);
 
 
 

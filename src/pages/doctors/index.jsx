@@ -6,6 +6,8 @@ import Loader from "../../components/Loader";
 import DoctorsFilterBar from "./components/DoctorsFilterBar";
 import DoctorListCard from "./components/DoctorListCard";
 import { useBrowserLocation } from "../../state/BrowserLocationContext";
+import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
+import { translateWorkerTrade } from "../../utils/workerTradeLabels";
 
 const DoctorsPage = () => {
   const { t, i18n } = useTranslation();
@@ -14,10 +16,22 @@ const DoctorsPage = () => {
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [trade, setTrade] = useState("All");
   const [experience, setExperience] = useState("All");
   const [availability, setAvailability] = useState("All");
   const [searchLoading, setSearchLoading] = useState(false);
   const [nearBy, setNearBy] = useState({ active: false, lat: null, lng: null });
+
+  const TRADE_OPTIONS = useMemo(
+    () => [
+      { value: "All", label: t("doctors.trade.all") },
+      ...DOCTOR_SIGNUP_SPECIALIZATIONS.map((spec) => ({
+        value: spec,
+        label: translateWorkerTrade(t, spec),
+      })),
+    ],
+    [t, i18n.language]
+  );
 
   const EXPERIENCE_OPTIONS = useMemo(
     () => [
@@ -54,6 +68,9 @@ const DoctorsPage = () => {
         params.lng = nearBy.lng;
         params.radiusKm = 100;
       }
+      if (trade && trade !== "All") {
+        params.specialization = trade;
+      }
       const { data } = await patient.get("/doctors", { params });
       setDoctors(data || []);
     } catch {
@@ -61,7 +78,7 @@ const DoctorsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [t, nearBy.active, nearBy.lat, nearBy.lng]);
+  }, [t, nearBy.active, nearBy.lat, nearBy.lng, trade]);
 
   useEffect(() => {
     void fetchDoctors();
@@ -118,6 +135,7 @@ const DoctorsPage = () => {
 
   const resetFilters = () => {
     setSearch("");
+    setTrade("All");
     setExperience("All");
     setAvailability("All");
     clearNearOnPage();
@@ -133,6 +151,9 @@ const DoctorsPage = () => {
       <DoctorsFilterBar
         search={search}
         setSearch={setSearch}
+        trade={trade}
+        setTrade={setTrade}
+        tradeOptions={TRADE_OPTIONS}
         experience={experience}
         setExperience={setExperience}
         availability={availability}

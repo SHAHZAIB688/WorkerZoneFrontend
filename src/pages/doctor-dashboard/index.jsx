@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import patient from "../../api/client";
 import i18n from "../../i18n/config";
@@ -9,11 +9,12 @@ import DashboardShell from "../../components/DashboardShell";
 import VerificationModal from "../../components/VerificationModal";
 import PrescriptionForm from "../../components/PrescriptionForm";
 import AccountProfileForm from "../../components/AccountProfileForm";
-import { DashboardIcon, AppointmentIcon, FileIcon, ProfileIcon, IconWrapper } from "../../components/icons";
+import { DashboardIcon, AppointmentIcon, FileIcon, ProfileIcon, IconWrapper, FeaturedAdIcon } from "../../components/icons";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../state/AuthContext";
 import { useBrowserLocation } from "../../state/BrowserLocationContext";
 import DoctorReplyModal from "./components/DoctorReplyModal";
+import WorkerFeaturedSection from "./components/WorkerFeaturedSection";
 import VideoCall from "../../components/VideoCall";
 import Dropdown from "../../components/Dropdown";
 import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
@@ -90,6 +91,7 @@ const DoctorDashboard = () => {
   const [videoCall, setVideoCall] = useState({ open: false, roomId: null });
   const [practiceGeoWorking, setPracticeGeoWorking] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loadProfile = async () => {
     try {
@@ -226,6 +228,40 @@ const DoctorDashboard = () => {
   useEffect(() => {
     if (profile) fetchReviews();
   }, [profile]);
+
+  useEffect(() => {
+    const verifyFeaturedReturn = async () => {
+      const params = new URLSearchParams(location.search);
+      const featuredStatus = params.get("featured_payment");
+      const sessionId = params.get("session_id");
+      if (!featuredStatus) return;
+
+      if (featuredStatus === "cancelled") {
+        toast(i18n.t("dash.doctor.featured.paymentCancelled"));
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      if (featuredStatus !== "success" || !sessionId) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      try {
+        const { data } = await patient.post("/doctors/featured-listing/verify-payment", { sessionId });
+        toast.success(
+          i18n.t("dash.doctor.featured.toastSuccess", { until: new Date(data.featuredUntil).toLocaleString() })
+        );
+        await loadProfile();
+      } catch (error) {
+        toast.error(error.response?.data?.message || i18n.t("dash.doctor.featured.toastFail"));
+      } finally {
+        navigate("/dashboard", { replace: true });
+      }
+    };
+
+    void verifyFeaturedReturn();
+  }, [location.search, navigate]);
 
   const stats = useMemo(() => {
     const now = new Date();
@@ -398,6 +434,7 @@ const DoctorDashboard = () => {
             hasNotification: appointments.some((a) => apptStatus(a) === "pending" || canUseVideo(a)),
           },
           { id: "reviews", label: t("dash.doctor.nav.reviews"), icon: FileIcon },
+          { id: "featured", label: t("dash.doctor.nav.featured"), icon: FeaturedAdIcon },
           { id: "profile", label: t("dash.doctor.nav.profile"), icon: ProfileIcon },
         ]}
       >
@@ -536,13 +573,13 @@ const DoctorDashboard = () => {
                   <p className="mt-4 text-sm text-slate-500">{t("dash.doctor.noBookings")}</p>
                 ) : (
                   <div className="mt-4 overflow-x-auto">
-                    <table className="min-w-full text-start text-sm">
+                    <table className="dashboard-table min-w-full text-sm">
                       <thead className="bg-slate-100 text-slate-700">
                         <tr>
-                          <th className="px-4 py-3">{t("dash.doctor.tablePatient")}</th>
-                          <th className="px-4 py-3">{t("dash.doctor.tableDateTime")}</th>
-                          <th className="px-4 py-3">{t("dash.doctor.tableStatus")}</th>
-                          <th className="px-4 py-3">{t("dash.doctor.tableActions")}</th>
+                          <th scope="col" className="px-4 py-3">{t("dash.doctor.tablePatient")}</th>
+                          <th scope="col" className="px-4 py-3">{t("dash.doctor.tableDateTime")}</th>
+                          <th scope="col" className="px-4 py-3">{t("dash.doctor.tableStatus")}</th>
+                          <th scope="col" className="px-4 py-3">{t("dash.doctor.tableActions")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -800,6 +837,10 @@ const DoctorDashboard = () => {
                 </div>
               </section>
               </div>
+            )}
+
+            {activeTab === "featured" && (
+              <WorkerFeaturedSection profile={profile} formatConsultationFee={formatConsultationFee} />
             )}
 
             {activeTab === "reviews" && (

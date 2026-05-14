@@ -44,11 +44,11 @@ export const generatePDF = (prescription, doctorName, specialization) => {
   doc.setDrawColor(226, 232, 240); // slate-200
   doc.line(14, 58, 196, 58);
 
-  // 3. Patient Info
+  // 3. Client info
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...primaryColor);
-  doc.text("Patient Information", 14, 68);
+  doc.text("Client information", 14, 68);
 
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
@@ -126,7 +126,7 @@ export const generatePDF = (prescription, doctorName, specialization) => {
   doc.setTextColor(...primaryColor);
   
   if (prescription.labTests) {
-    doc.text("Checks & Inspections", 14, currentY);
+    doc.text("Recommendations & next steps", 14, currentY);
     currentY += 6;
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
@@ -140,7 +140,7 @@ export const generatePDF = (prescription, doctorName, specialization) => {
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...primaryColor);
-    doc.text("Advice & Instructions", 14, currentY);
+    doc.text("Client instructions", 14, currentY);
     currentY += 6;
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
@@ -161,8 +161,9 @@ export const generatePDF = (prescription, doctorName, specialization) => {
   doc.line(140, pageHeight - 30, 196, pageHeight - 30);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
-  doc.text("Doctor Signature", 155, pageHeight - 24);
+  doc.text("Worker authorization", 150, pageHeight - 24);
 
   // Save PDF
-  doc.save(`Service_Report_${prescription.patientName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+  const clientSlug = (prescription.patientName || "Client").replace(/\s+/g, "_");
+  doc.save(`Service_Handover_${clientSlug}_${new Date().toISOString().split("T")[0]}.pdf`);
 };

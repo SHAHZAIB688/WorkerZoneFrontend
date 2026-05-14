@@ -100,7 +100,10 @@
     "howSubtitle": "چار آسان مراحل میں اپنی بُکنگ مکمل کریں۔",
     "stepLabel": "مرحلہ {{n}}",
     "featuredTitle": "نمایاں ورکر",
-    "featuredSubtitle": "ہمارے سب سے زیادہ اعتماد والے پیشہ ور حضرات سے ملیں۔",
+    "featuredSubtitle": "صرف ادا شدہ نمایاں فہرستیں۔ ورکر ڈیش بورڈ سے بوسٹ خریدیں۔",
+    "featuredHint": "ورکر: ڈیش بورڈ → اشتہار نمایاں → اسٹرائپ سے ادا کریں۔",
+    "featuredPill": "نمایاں",
+    "featuredEmpty": "فی الوقت کوئی نمایاں ورکر نہیں۔ ورکر اپنے ڈیش بورڈ سے نمایاں جگہ خرید سکتے ہیں۔",
     "experience": "تجربہ",
     "years": "{{n}} سال",
     "rating": "درجہ بندی",
@@ -320,6 +323,10 @@
     "pageTitle": "مناسب ورکر تلاش کریں",
     "pageSubtitle": "ہمارے تصدیق شدہ ہنر مند نیٹ ورک میں تلاش کریں۔",
     "searchPlaceholder": "نام، مہارت یا سروس سے تلاش کریں...",
+    "tradePh": "پیشہ / زمرہ",
+    "trade": {
+      "all": "تمام پیشے"
+    },
     "experiencePh": "تجربہ",
     "availabilityPh": "دستیابی",
     "reset": "ری سیٹ",
@@ -356,7 +363,8 @@
       "yearsPlus": "{{n}}+ سال",
       "availability": "دستیابی",
       "weekdays": "پیر–جمعہ",
-      "viewDetails": "تفصیلات"
+      "viewDetails": "تفصیلات",
+      "featured": "نمایاں"
     }
   },
   "terms": {
@@ -384,7 +392,11 @@
     "aboutTitle": "اس پیشہ ور کے بارے میں",
     "noBio": "ابھی کوئی تعارف نہیں۔",
     "bookService": "خدمت بُک کریں",
-    "backToList": "ورکروں پر واپس"
+    "backToList": "ورکروں پر واپس",
+    "contactTitle": "رابطہ",
+    "noPhone": "فون دستیاب نہیں",
+    "locationTitle": "خدمت کا علاقہ",
+    "featuredBadge": "نمایاں فہرست"
   },
   "doctorReviews": {
     "title": "جائزے",
@@ -400,6 +412,8 @@
     "plumber": "پلمبر",
     "carpenter": "بڑھئی",
     "painter": "پینٹر",
+    "ac_installation": "اے سی انسٹالیشن",
+    "tv_installation": "ٹی وی انسٹالیشن",
     "mason_and_tiler": "راج اور ٹائل کا ماہر",
     "hvac_technician": "اے سی و حرارتی نظام تکنیکی",
     "welder": "ویلڈنگ کار",
