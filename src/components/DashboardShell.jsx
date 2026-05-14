@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../state/AuthContext";
 import DashboardSidebar from "./DashboardSidebar";
@@ -159,11 +160,18 @@ const DashboardShell = ({ title, subtitle, navItems, children, notifications, de
                   <p className="text-sm font-bold text-slate-900">{user?.name}</p>
                   <p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400">{roleLabel}</p>
                 </div>
-                <img 
-                  src={`https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(user?.name || "User")}`}
-                  className="h-8 w-8 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-100 sm:h-10 sm:w-10"
-                  alt={t("dash.shell.avatarAlt")}
-                />
+                <Link
+                  to="/"
+                  title={t("nav.home")}
+                  aria-label={t("nav.home")}
+                  className="shrink-0 rounded-full ring-2 ring-transparent transition hover:ring-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                >
+                  <img
+                    src={`https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(user?.name || "User")}`}
+                    className="h-8 w-8 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-100 sm:h-10 sm:w-10"
+                    alt=""
+                  />
+                </Link>
               </div>
             </div>
           </div>
