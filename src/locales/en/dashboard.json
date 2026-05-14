@@ -220,6 +220,8 @@
         "appointments": "Bookings",
         "reviews": "Client reviews",
         "featured": "Feature your ad",
+        "store": "Materials store",
+        "storeOrders": "My store orders",
         "profile": "Profile & account"
       },
       "toast": {

@@ -9,7 +9,7 @@ import DashboardShell from "../../components/DashboardShell";
 import VerificationModal from "../../components/VerificationModal";
 import PrescriptionForm from "../../components/PrescriptionForm";
 import AccountProfileForm from "../../components/AccountProfileForm";
-import { DashboardIcon, AppointmentIcon, FileIcon, ProfileIcon, IconWrapper, FeaturedAdIcon } from "../../components/icons";
+import { DashboardIcon, AppointmentIcon, FileIcon, ProfileIcon, IconWrapper, FeaturedAdIcon, StoreIcon } from "../../components/icons";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../state/AuthContext";
 import { useBrowserLocation } from "../../state/BrowserLocationContext";
@@ -17,6 +17,9 @@ import DoctorReplyModal from "./components/DoctorReplyModal";
 import WorkerFeaturedSection from "./components/WorkerFeaturedSection";
 import VideoCall from "../../components/VideoCall";
 import Dropdown from "../../components/Dropdown";
+import StoreItemDetailsModal from "../../components/StoreItemDetailsModal";
+import PatientStoreSection from "../patient-dashboard/components/PatientStoreSection";
+import PatientStoreOrdersSection from "../patient-dashboard/components/PatientStoreOrdersSection";
 import { DOCTOR_SIGNUP_SPECIALIZATIONS } from "../home/components/HomeConstants";
 import { translateWorkerTrade } from "../../utils/workerTradeLabels";
 import { resolveDeviceLocationForForm } from "../../utils/reverseGeocode";
@@ -90,6 +93,7 @@ const DoctorDashboard = () => {
   const [prescriptionModal, setPrescriptionModal] = useState({ isOpen: false, appointment: null });
   const [videoCall, setVideoCall] = useState({ open: false, roomId: null });
   const [practiceGeoWorking, setPracticeGeoWorking] = useState(false);
+  const [selectedStoreItemId, setSelectedStoreItemId] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -261,6 +265,39 @@ const DoctorDashboard = () => {
     };
 
     void verifyFeaturedReturn();
+  }, [location.search, navigate]);
+
+  useEffect(() => {
+    const verifyStorePaymentReturn = async () => {
+      const params = new URLSearchParams(location.search);
+      const storePayment = params.get("store_payment");
+      const sessionId = params.get("session_id");
+      const orderId = params.get("order_id");
+
+      if (!storePayment) return;
+
+      if (storePayment === "cancelled") {
+        toast(i18n.t("dash.store.storePaymentCancelled"));
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      if (storePayment !== "success" || !sessionId || !orderId) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      try {
+        await patient.post("/store/orders/verify-checkout", { sessionId, orderId });
+        toast.success(i18n.t("dash.store.storePaymentPaid"));
+      } catch (error) {
+        toast.error(error.response?.data?.message || i18n.t("dash.store.storePaymentVerifyFail"));
+      } finally {
+        navigate("/dashboard", { replace: true });
+      }
+    };
+
+    void verifyStorePaymentReturn();
   }, [location.search, navigate]);
 
   const stats = useMemo(() => {
@@ -435,6 +472,8 @@ const DoctorDashboard = () => {
           },
           { id: "reviews", label: t("dash.doctor.nav.reviews"), icon: FileIcon },
           { id: "featured", label: t("dash.doctor.nav.featured"), icon: FeaturedAdIcon },
+          { id: "store", label: t("dash.doctor.nav.store"), icon: StoreIcon },
+          { id: "store-orders", label: t("dash.doctor.nav.storeOrders"), icon: FileIcon },
           { id: "profile", label: t("dash.doctor.nav.profile"), icon: ProfileIcon },
         ]}
       >
@@ -843,6 +882,10 @@ const DoctorDashboard = () => {
               <WorkerFeaturedSection profile={profile} formatConsultationFee={formatConsultationFee} />
             )}
 
+            {activeTab === "store" && <PatientStoreSection onSelectItem={setSelectedStoreItemId} />}
+
+            {activeTab === "store-orders" && <PatientStoreOrdersSection />}
+
             {activeTab === "reviews" && (
               <section className="space-y-4">
                 <div className="flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm border border-slate-200">
@@ -899,6 +942,13 @@ const DoctorDashboard = () => {
           </>
         )}
       </DashboardShell>
+
+      <StoreItemDetailsModal
+        itemId={selectedStoreItemId}
+        isOpen={!!selectedStoreItemId}
+        onClose={() => setSelectedStoreItemId(null)}
+        onOrderPlaced={() => void fetchAppointments()}
+      />
 
       <DoctorReplyModal replyModal={replyModal} setReplyModal={setReplyModal} onSubmit={submitResponse} />
 
